@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/colorPrimary"
         android:padding="15dp"
-        android:text="Select item"
+        android:text="Lunch - Sushi"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="50dp"
