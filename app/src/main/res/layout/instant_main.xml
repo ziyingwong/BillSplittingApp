@@ -20,9 +20,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/instantSplitTitle"
-        android:background="@color/background"
+        android:layout_marginTop="0dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -36,7 +36,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Lunch - McD"
+                android:text="Lunch - Sushi"
                 android:textSize="25dp" />
 
             <TextView
@@ -79,7 +79,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Dinner - Sushi"
+                android:text="Dinner - McD"
                 android:textSize="25dp" />
 
             <TextView
@@ -94,10 +94,13 @@
 
     <Button
         android:id="@+id/button"
+        android:background="@color/colorAccent"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
+        android:textColor="@color/cardBackground"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="NEW" />
 
 
 </RelativeLayout>
