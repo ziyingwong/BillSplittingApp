@@ -24,7 +24,17 @@
         android:layout_height="55dp"
         android:text="EQUALLY"
         tools:layout_editor_absoluteX="98dp"
-        tools:layout_editor_absoluteY="152dp" />
+        tools:layout_editor_absoluteY="252dp" />
+
+    <Button
+        android:id="@+id/button14"
+        android:layout_width="215dp"
+        android:layout_height="55dp"
+        android:text="EXACT AMOUNT"
+        app:layout_constraintEnd_toEndOf="@+id/button13"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button13"
+        tools:layout_editor_absoluteY="424dp" />
 
     <Button
         android:id="@+id/button13"
@@ -32,25 +42,8 @@
         android:layout_height="55dp"
         android:text="PERCENTAGE"
         app:layout_constraintEnd_toEndOf="@+id/button12"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/button12"
-        tools:layout_editor_absoluteY="238dp" />
-
-    <Button
-        android:id="@+id/button14"
-        android:layout_width="215dp"
-        android:layout_height="55dp"
-        android:text="SHARE"
-        app:layout_constraintEnd_toEndOf="@+id/button13"
-        app:layout_constraintStart_toStartOf="@+id/button13"
-        tools:layout_editor_absoluteY="324dp" />
-
-    <Button
-        android:id="@+id/button15"
-        android:layout_width="215dp"
-        android:layout_height="55dp"
-        android:text="EXACT AMOUNT"
-        app:layout_constraintEnd_toEndOf="@+id/button14"
-        app:layout_constraintStart_toStartOf="@+id/button14"
-        tools:layout_editor_absoluteY="409dp" />
+        tools:layout_editor_absoluteY="338dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

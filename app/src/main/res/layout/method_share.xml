@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,34 +14,25 @@
             android:layout_height="93dp"
             android:background="#05AEC5"
             android:gravity="center_horizontal|center_vertical"
-            android:text="Split Exact Amount"
+            android:text="Split Percentage"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             android:typeface="sans" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="190dp"
+            android:layout_height="222dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView6"
-                android:layout_width="292dp"
+                android:layout_width="match_parent"
                 android:layout_height="73dp"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="The total amount need to pay is"
+                android:text="How many share do you want to pay?"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="RM 27.50"
-                android:textColor="#E91E63"
-                android:textSize="24sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,24 +44,15 @@
 
             <TextView
                 android:id="@+id/textView8"
-                android:layout_width="190dp"
+                android:layout_width="195dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="Christine Heng"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textView44"
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="RM" />
-
             <EditText
                 android:id="@+id/editText2"
-                android:layout_width="20dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:layout_weight="1"
@@ -79,6 +60,15 @@
                 android:gravity="center"
                 android:inputType="textPersonName"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textView44"
+                android:layout_width="3dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="right|left"
+                android:text="share" />
 
         </LinearLayout>
 
@@ -91,24 +81,15 @@
 
             <TextView
                 android:id="@+id/textView9"
-                android:layout_width="190dp"
+                android:layout_width="195dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="Chia Jee"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textView46"
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="RM" />
-
             <EditText
                 android:id="@+id/editText3"
-                android:layout_width="20dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:layout_weight="1"
@@ -116,6 +97,15 @@
                 android:gravity="center"
                 android:inputType="textPersonName"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textView46"
+                android:layout_width="3dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="right|left"
+                android:text="share" />
 
         </LinearLayout>
 
@@ -128,24 +118,15 @@
 
             <TextView
                 android:id="@+id/textView10"
-                android:layout_width="190dp"
+                android:layout_width="195dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="Syakir"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textView47"
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="RM" />
-
             <EditText
                 android:id="@+id/editText4"
-                android:layout_width="20dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:layout_weight="1"
@@ -153,6 +134,15 @@
                 android:gravity="center"
                 android:inputType="textPersonName"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textView47"
+                android:layout_width="3dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="right|left"
+                android:text="share" />
 
         </LinearLayout>
 
@@ -165,24 +155,15 @@
 
             <TextView
                 android:id="@+id/textView11"
-                android:layout_width="190dp"
+                android:layout_width="195dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="Zi Ying"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textView48"
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="RM" />
-
             <EditText
                 android:id="@+id/editText5"
-                android:layout_width="20dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:layout_weight="1"
@@ -190,6 +171,15 @@
                 android:gravity="center"
                 android:inputType="textPersonName"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textView48"
+                android:layout_width="3dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="right|left"
+                android:text="share" />
 
         </LinearLayout>
 
@@ -202,24 +192,15 @@
 
             <TextView
                 android:id="@+id/textView13"
-                android:layout_width="190dp"
+                android:layout_width="195dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="Amirul"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textView49"
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="RM" />
-
             <EditText
                 android:id="@+id/editText6"
-                android:layout_width="20dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:layout_weight="1"
@@ -227,6 +208,15 @@
                 android:gravity="center"
                 android:inputType="textPersonName"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textView49"
+                android:layout_width="3dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="right|left"
+                android:text="share" />
 
         </LinearLayout>
 
@@ -245,5 +235,6 @@
             android:text="CHANGE SPLITTING METHOD" />
 
     </LinearLayout>
+
 
 </LinearLayout>
