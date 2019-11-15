@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "196914925098",
+    "firebase_url": "https://billsplittingapp-c376c.firebaseio.com",
+    "project_id": "billsplittingapp-c376c",
+    "storage_bucket": "billsplittingapp-c376c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196914925098:android:9d7bf2586ca21618e9fd53",
+        "android_client_info": {
+          "package_name": "com.example.billsplittingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196914925098-5t5rnihj0thou02bh5tosf5uod6pms21.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.billsplittingapp",
+            "certificate_hash": "48d52dcbe625d3c38b3c179ec93ec9b8ce6bc768"
+          }
+        },
+        {
+          "client_id": "196914925098-mrt0b3mff7ls5n1vf78s4bs62ql0r4l6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpEJ6Umhpckf_j7284hdsfhCi0-yfmLh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "196914925098-mrt0b3mff7ls5n1vf78s4bs62ql0r4l6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
