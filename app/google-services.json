@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "196914925098-mfk9c09bjcousr6r1pdcciui9k04e94g.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.billsplittingapp",
-            "certificate_hash": "81a2f7a82cc943a9798831d890931c39cb25194d"
-          }
-        },
-        {
           "client_id": "196914925098-5t5rnihj0thou02bh5tosf5uod6pms21.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
