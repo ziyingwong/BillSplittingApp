@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_contact_list"
+        android:enabled="true"
+        android:icon="@drawable/ic_contact"
+        android:title=""/>
+
+    <item
+        android:id="@+id/navigation_group"
+        android:enabled="true"
+        android:icon="@drawable/ic_group"
+        android:title=""/>
+
+    <item
+        android:id="@+id/navigation_quick_split"
+        android:enabled="true"
+        android:icon="@drawable/ic_add"
+        android:title=""/>
+
+    <item
+        android:id="@+id/navigation_notification"
+        android:enabled="true"
+        android:icon="@drawable/ic_notification"
+        android:title=""/>
+
+
+</menu>
