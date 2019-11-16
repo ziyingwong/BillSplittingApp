@@ -34,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/login_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="70dp"
@@ -60,7 +60,7 @@
         android:textColor="@android:color/holo_red_dark"
         android:text="Your Password is Incorrect!"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/editText"/>
+        app:layout_constraintTop_toBottomOf="@id/login_password"/>
 
     <TextView
         android:id="@+id/reset_password_button"
