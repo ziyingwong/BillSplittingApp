@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 
 public class QuickSplitMainRecyclerAdapter extends FirestoreRecyclerAdapter<QuickSplitBillObjects, QuickSplitMainRecyclerAdapter.ViewHolder> {
@@ -39,7 +41,7 @@ public class QuickSplitMainRecyclerAdapter extends FirestoreRecyclerAdapter<Quic
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ziying_instant_main_recyclercontent, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ziying_quick_main_recyclercontent, parent, false);
         return new ViewHolder(v);
     }
 
@@ -55,4 +57,44 @@ public class QuickSplitMainRecyclerAdapter extends FirestoreRecyclerAdapter<Quic
             statusTV = itemView.findViewById(R.id.statusText);
         }
     }
+}
+
+class QuickSplitPayerAddAdapter extends RecyclerView.Adapter<QuickSplitPayerAddAdapter.ViewHolder> {
+    List<items> items;
+
+    public QuickSplitPayerAddAdapter(List<items> items) {
+        this.items = items;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ziying_quick_payer_recycleradditem, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        items item = items.get(position);
+        holder.itemName.setText(item.name);
+        holder.price.setText(Double.toString(item.price));
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView itemName;
+        TextView price;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            itemName = itemView.findViewById(R.id.itemName);
+            price = itemView.findViewById(R.id.priceText);
+        }
+    }
+
 }

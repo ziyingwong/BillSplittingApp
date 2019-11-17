@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -28,8 +29,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.e("mytag", "Welcome back");
         if (auth.getCurrentUser() != null) {
-
+            final Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
     }
 }

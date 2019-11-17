@@ -12,7 +12,6 @@ public class QuickSplitBillObjects {
     String owner;
     List<String> splitWith;
     String status;
-    CollectionReference items;
     String billName;
 
     public QuickSplitBillObjects() {
@@ -24,7 +23,6 @@ public class QuickSplitBillObjects {
         this.owner = owner;
         this.splitWith = splitWith;
         this.status = status;
-        this.items = items;
         this.billName = billName;
     }
 
@@ -48,10 +46,6 @@ public class QuickSplitBillObjects {
         return status;
     }
 
-    @PropertyName("items")
-    public CollectionReference getItems() {
-        return items;
-    }
 
     @PropertyName("billName")
     public String getBillName() {
@@ -74,12 +68,24 @@ public class QuickSplitBillObjects {
         this.status = status;
     }
 
-    public void setItems(CollectionReference items) {
-        this.items = items;
-    }
 
     public void setBillName(String billName) {
         this.billName = billName;
+    }
+}
+
+class items {
+    double price;
+    String name;
+
+    public items() {
+
+    }
+
+    public items(String name, double price) {
+        this.name = name;
+        this.price = price;
+
     }
 }
 
