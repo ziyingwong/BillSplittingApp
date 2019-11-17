@@ -12,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -59,23 +57,23 @@ public class QuickSplitMainRecyclerAdapter extends FirestoreRecyclerAdapter<Quic
     }
 }
 
-class QuickSplitPayerAddAdapter extends RecyclerView.Adapter<QuickSplitPayerAddAdapter.ViewHolder> {
-    List<items> items;
+class QuickSplitCreditorAddAdapter extends RecyclerView.Adapter<QuickSplitCreditorAddAdapter.ViewHolder> {
+    List<QuickSplitItems> items;
 
-    public QuickSplitPayerAddAdapter(List<items> items) {
+    public QuickSplitCreditorAddAdapter(List<QuickSplitItems> items) {
         this.items = items;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ziying_quick_payer_recycleradditem, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ziying_quick_creditor_additemrecycler, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        items item = items.get(position);
+        QuickSplitItems item = items.get(position);
         holder.itemName.setText(item.name);
         holder.price.setText(Double.toString(item.price));
 
@@ -94,6 +92,46 @@ class QuickSplitPayerAddAdapter extends RecyclerView.Adapter<QuickSplitPayerAddA
             super(itemView);
             itemName = itemView.findViewById(R.id.itemName);
             price = itemView.findViewById(R.id.priceText);
+        }
+    }
+
+}
+
+class QuickSplitGeneralEnterPortionAdapter extends RecyclerView.Adapter<QuickSplitGeneralEnterPortionAdapter.ViewHolder> {
+    List<QuickSplitItems> items;
+
+    public QuickSplitGeneralEnterPortionAdapter(List<QuickSplitItems> items) {
+        this.items = items;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ziying_quick_general_itemsportionrecycler, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        QuickSplitItems item = items.get(position);
+        holder.itemName.setText(item.name);
+        holder.price.setText(Double.toString(item.price));
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView itemName;
+        TextView price;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            itemName = itemView.findViewById(R.id.itemName);
+            price = itemView.findViewById(R.id.itemPrice);
         }
     }
 

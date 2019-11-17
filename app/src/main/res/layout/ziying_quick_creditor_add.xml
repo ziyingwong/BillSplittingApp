@@ -41,23 +41,23 @@
             android:textSize="20dp" />
 
         <ImageView
+            android:id="@+id/addItemButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:clickable="true"
             android:adjustViewBounds="true"
-            android:id="@+id/addItemButton"
+            android:clickable="true"
             android:src="@drawable/ic_add_grey_24dp" />
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/itemsBox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/tax"
         android:layout_below="@+id/itemText"
         android:layout_marginHorizontal="20dp"
-        android:id="@+id/itemsBox"
         android:background="@drawable/box_background"
         android:orientation="vertical">
 
@@ -65,12 +65,12 @@
 
     <EditText
         android:id="@+id/tax"
-        android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttonAdd"
         android:layout_margin="20dp"
         android:hint="Tax"
+        android:inputType="numberDecimal"
         android:padding="20dp" />
 
 
@@ -83,4 +83,12 @@
         android:text="Add"
         android:textColor="@color/cardBackground"
         android:textStyle="bold" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
 </RelativeLayout>

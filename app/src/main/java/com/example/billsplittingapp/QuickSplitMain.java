@@ -1,8 +1,8 @@
 package com.example.billsplittingapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,12 +53,34 @@ public class QuickSplitMain extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add) {
-            Intent intent = new Intent(getActivity(), QuickSplitPayerAdd.class);
+            Intent intent = new Intent(getActivity(), QuickSplitCreditorAdd.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
         } else if (item.getItemId() == R.id.scan) {
+            //generate qr CODE
+//            try {
+//                QRGEncoder qrgEncoder = new QRGEncoder("hello", null, QRGContents.Type.TEXT, 600);
+//                Bitmap bm = qrgEncoder.encodeAsBitmap();
+//                View v = getLayoutInflater().inflate(R.layout.ziying_quick_creditor_showqrcode, null);
+//                AlertDialog dialog = new AlertDialog.Builder(getActivity())
+//                        .setNeutralButton("Dismiss", null)
+//                        .setView(v)
+//                        .create();
+//                ImageView qrCode = v.findViewById(R.id.qrCodeView);
+//                qrCode.setImageBitmap(bm);
+//                dialog.show();
+//            } catch (WriterException e) {
+//                e.printStackTrace();
+//            }
 
+            Intent intent = new Intent(getActivity(), QuickSplitGeneralEnterShare.class);
+            intent.putExtra("billId","8fipAwL00wxCTBeQbDXz");
+
+//            Intent intent = new Intent(getActivity(), QuickSplitDebtorScanCamera.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
+
 }

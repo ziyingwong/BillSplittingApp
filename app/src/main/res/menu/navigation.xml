@@ -12,7 +12,7 @@
         android:id="@+id/navigation_group"
         android:icon="@drawable/bottom_navigation_group"
         app:showAsAction="always"
-        android:title="2"/>
+        android:title="Group"/>
 
     <item
         android:id="@+id/navigation_quick_split"

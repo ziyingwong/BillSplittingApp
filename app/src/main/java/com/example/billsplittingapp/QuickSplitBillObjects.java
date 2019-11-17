@@ -74,18 +74,40 @@ public class QuickSplitBillObjects {
     }
 }
 
-class items {
+class QuickSplitItems {
     double price;
     String name;
 
-    public items() {
+    public QuickSplitItems() {
 
     }
 
-    public items(String name, double price) {
+    public QuickSplitItems(String name, double price) {
         this.name = name;
         this.price = price;
 
     }
+
+    @PropertyName("Field")
+    public String getName() {
+        return name;
+    }
+
+    @PropertyName("Value")
+    public double getPrice() {
+        return price;
+    }
+}
+
+class QuickSplitMemberStatus {
+    static QuickSplitMemberStatus status;
+    public static int NOTHING_SELECTED = 1;
+    public static int SELECTED_ITEM = 2;
+    public static int PAID = 3;
+
+    private QuickSplitMemberStatus() {
+
+    }
+
 }
 
