@@ -19,11 +19,12 @@
 
         <activity
             android:name=".ResetPasswordActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity android:name=".ReminderActivity" />
         <activity android:name=".MyFriendsActivity" />
         <activity android:name=".AddFriendActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RegisterActivity"
+            android:exported="true"/>
 
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -31,7 +32,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:exported="true"/>
         <activity android:name=".QuickSplitDebtorScanCamera"></activity>
         <activity
             android:name=".QuickSplitCreditorAdd"

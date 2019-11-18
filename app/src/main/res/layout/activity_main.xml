@@ -6,23 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/Theme.AppCompat.Light"
-        app:titleTextColor="@android:color/white" />
-
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/navigation"></FrameLayout>
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
+
+
+        <include
+            layout="@layout/app_bar_main"/>
+
+        <com.google.android.material.navigation.NavigationView
+            app:itemIconTint="@android:color/black"
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:headerLayout="@layout/nav_header_main"
+            android:layout_gravity="start"
+            app:menu="@menu/main_drawer"
+            />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+
+
+
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
