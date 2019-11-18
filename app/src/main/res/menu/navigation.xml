@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/navigation_contact_list"
-        android:enabled="true"
-        android:icon="@drawable/ic_contact"
-        android:title=""/>
+        android:icon="@drawable/bottom_navigation_contact"
+        app:showAsAction="always"
+        android:title="Contact"/>
 
     <item
         android:id="@+id/navigation_group"
-        android:enabled="true"
-        android:icon="@drawable/ic_group"
-        android:title=""/>
+        android:icon="@drawable/bottom_navigation_group"
+        app:showAsAction="always"
+        android:title="Group"/>
 
     <item
         android:id="@+id/navigation_quick_split"
-        android:enabled="true"
-        android:icon="@drawable/ic_add"
-        android:title=""/>
+        android:icon="@drawable/bottom_navigation_quick_split"
+        app:showAsAction="always"
+        android:title="Quick Split"/>
 
     <item
         android:id="@+id/navigation_notification"
-        android:enabled="true"
-        android:icon="@drawable/ic_notification"
-        android:title=""/>
+        android:icon="@drawable/bottom_navigation_notification"
+        app:showAsAction="always"
+        android:title="Notification"/>
 
 
 </menu>
