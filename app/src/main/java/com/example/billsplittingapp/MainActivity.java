@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -21,6 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     Fragment selectFragment;
@@ -69,16 +71,19 @@ public class MainActivity extends AppCompatActivity {
                         int id = menuItem.getItemId();
                         switch (id){
                             case R.id.nav_logout:
-                                //logout
-                                Toast.makeText(getApplicationContext(),
-                                        "Logout",Toast.LENGTH_SHORT).show();
+                                auth.signOut();
+                                Intent i = new Intent(MainActivity.this,LoginActivity.class);
+                                startActivity(i);
+                                break;
                             case R.id.nav_change_password:
                                 //change pw
-                                Toast.makeText(getApplicationContext(),
-                                        "Change Password",Toast.LENGTH_SHORT).show();
+                                Intent i2 = new Intent(MainActivity.this,ChangePasswordActivity.class);
+                                startActivity(i2);
+                                break;
                             default:
                                 return true;
                         }
+                        return true;
                     }
                 }
         );

@@ -11,30 +11,35 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_app_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
+        <activity android:name=".ChangePasswordActivity"></activity>
+        <activity
+            android:name=".ForgetPasswordActivity"
+            android:exported="true" />
         <activity
             android:name=".ResetPasswordActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity android:name=".ReminderActivity" />
         <activity android:name=".MyFriendsActivity" />
         <activity android:name=".AddFriendActivity" />
-        <activity android:name=".RegisterActivity"
-            android:exported="true"/>
-
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            android:exported="true"/>
-        <activity android:name=".QuickSplitDebtorScanCamera"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+        <activity android:name=".QuickSplitDebtorScanCamera" />
         <activity
             android:name=".QuickSplitCreditorAdd"
             android:windowSoftInputMode="adjustPan" />

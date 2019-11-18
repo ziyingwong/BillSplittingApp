@@ -75,6 +75,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void onForgetPassword(View v){
+        Intent i = new Intent(LoginActivity.this,ForgetPasswordActivity.class);
+        startActivity(i);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
