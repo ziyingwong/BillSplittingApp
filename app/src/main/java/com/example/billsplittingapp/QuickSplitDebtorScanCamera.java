@@ -2,10 +2,14 @@ package com.example.billsplittingapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,7 +21,9 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.zxing.Result;
 
 import java.util.HashMap;
@@ -38,27 +44,60 @@ public class QuickSplitDebtorScanCamera extends AppCompatActivity {
         scannerView = findViewById(R.id.qrCodeScanner);
         scannerView.setResultHandler(new ZXingScannerView.ResultHandler() {
             @Override
-            public void handleResult(Result result) {
+            public void handleResult(final Result result) {
+
                 final String billId = result.getText();
                 Map<String, Object> splitWithUser = new HashMap<>();
                 splitWithUser.put("status", QuickSplitMemberStatus.NOTHING_SELECTED);
-                db.collection("InstantSplit").document(billId)
+                splitWithUser.put("displayName", auth.getCurrentUser().getDisplayName());
+                splitWithUser.put("uid", auth.getCurrentUser().getUid());
+                db.collection("QuickSplit").document(billId)
                         .collection("splitWith").document(auth.getCurrentUser().getUid())
                         .set(splitWithUser).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Intent intent = new Intent(QuickSplitDebtorScanCamera.this, QuickSplitGeneralEnterShare.class);
-                        intent.putExtra("billId", billId);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        Log.e("mytag", billId);
-                        startActivity(intent);
+                        db.collection("QuickSplit").document(billId)
+                                .update("splitWith", FieldValue.arrayUnion(auth.getCurrentUser().getUid()))
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Map<String, Object> billStatus = new HashMap<>();
+                                        billStatus.put("status", "pending");
+                                        db.collection("QuickSplit").document(billId).set(billStatus, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.e("mytag", "pending");
+                                                Intent intent = new Intent(QuickSplitDebtorScanCamera.this, QuickSplitGeneralEnterShare.class);
+                                                intent.putExtra("billId", billId);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                                Log.e("mytag", billId);
+                                                startActivity(intent);
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.e("mytag", e.toString());
+                                            }
+                                        });
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e("mytag", e.toString());
+                                Toast.makeText(QuickSplitDebtorScanCamera.this, "Error: " + e.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Log.e("mytag", e.toString());
                         Toast.makeText(QuickSplitDebtorScanCamera.this, "Error: " + e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
 
             }
         });

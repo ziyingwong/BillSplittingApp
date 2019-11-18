@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/totalText"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/box_background"
+        android:orientation="vertical">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/debtorName"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|start"
+                android:maxWidth="45dp"
+                android:padding="5dp"
+                android:text="Name"
+                android:textSize="15dp" />
+
+
+            <TextView
+                android:id="@+id/debtorAmount"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:maxWidth="45dp"
+                android:text="RM0.00"
+                android:padding="5dp"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/debtorStatus"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|end"
+                android:text="!paid"
+                android:padding="5dp"
+                android:textSize="15dp" />
+
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

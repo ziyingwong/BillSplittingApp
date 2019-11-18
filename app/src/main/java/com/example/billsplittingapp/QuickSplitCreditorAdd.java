@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,12 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.resources.TextAppearance;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.zxing.BarcodeFormat;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 public class QuickSplitCreditorAdd extends AppCompatActivity {
-    List<QuickSplitItems> itemsArray = new ArrayList<>();
+    List<QuickSplitItemsPrice> itemsArray = new ArrayList<>();
     Map<String, Double> itemArray = new HashMap<>();
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -88,7 +85,7 @@ public class QuickSplitCreditorAdd extends AppCompatActivity {
                     public void onClick(View view) {
                         EditText itemET = v.findViewById(R.id.itemName);
                         String itemName = itemET.getText().toString();
-                        EditText priceET = v.findViewById(R.id.priceText);
+                        EditText priceET = v.findViewById(R.id.itemPrice);
 
                         if (itemName.isEmpty()) {
                             Toast.makeText(dialog.getContext(), "Please enter description", Toast.LENGTH_SHORT).show();
@@ -96,7 +93,7 @@ public class QuickSplitCreditorAdd extends AppCompatActivity {
                             Toast.makeText(view.getContext(), "Please enter price", Toast.LENGTH_SHORT).show();
                         } else {
                             double price = Double.parseDouble(priceET.getText().toString());
-                            itemsArray.add(new QuickSplitItems(itemName, price));
+                            itemsArray.add(new QuickSplitItemsPrice(itemName, price));
                             itemArray.put(itemName, price);
                             adapter.notifyDataSetChanged();
                             dialog.dismiss();
@@ -153,7 +150,7 @@ public class QuickSplitCreditorAdd extends AppCompatActivity {
 
                     //calculate total
                     double total = 0;
-                    for (QuickSplitItems item : itemsArray) {
+                    for (QuickSplitItemsPrice item : itemsArray) {
                         total += item.price;
                     }
                     total *= (1 + Double.parseDouble(tax.getText().toString()) / 100);
@@ -183,8 +180,9 @@ public class QuickSplitCreditorAdd extends AppCompatActivity {
                             //add new bill
                             Map<String, Object> data = new HashMap<>();
                             List array = new ArrayList();
-                            final DocumentReference doc = db.collection("InstantSplit").document();
+                            final DocumentReference doc = db.collection("QuickSplit").document();
                             array.add(auth.getCurrentUser().getUid());
+                            data.put("billId", doc.getId());
                             data.put("billName", title.getText().toString());
                             data.put("createTime", Timestamp.now());
                             data.put("items", itemArray);
@@ -197,6 +195,8 @@ public class QuickSplitCreditorAdd extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
                                     Map<String, Object> splitWithUser = new HashMap<>();
                                     splitWithUser.put("status", QuickSplitMemberStatus.NOTHING_SELECTED);
+                                    splitWithUser.put("displayName","Me");
+                                    splitWithUser.put("uid",auth.getCurrentUser().getUid());
                                     doc.collection("splitWith").document(auth.getCurrentUser().getUid()).set(splitWithUser).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {

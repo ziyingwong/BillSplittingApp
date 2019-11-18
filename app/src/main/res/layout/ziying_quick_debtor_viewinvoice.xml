@@ -33,7 +33,7 @@
             android:padding="10dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="bottom"
@@ -43,7 +43,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="bottom"
@@ -53,12 +53,32 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.1"
-                android:gravity="bottom|center"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:padding="5dp"
+                android:text="Total share"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
                 android:padding="5dp"
                 android:text="Share"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|end"
+                android:padding="5dp"
+                android:text="Total"
                 android:textSize="15dp"
                 android:textStyle="bold" />
         </TableRow>
@@ -69,53 +89,53 @@
         android:id="@+id/itemListRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/buttonDone"
+        android:layout_above="@+id/taxTextView"
         android:layout_below="@+id/tableTitle"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp" />
+    <TextView
+        android:id="@+id/taxTextView"
+        android:text="Tax : 5%"
+        android:textSize="30dp"
+        android:paddingRight="15dp"
 
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
 
+        android:layout_above="@+id/totalTv"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/buttonDismiss"
+        android:paddingLeft="15dp"
+        android:textSize="40dp"
+        android:text="Total"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/totalTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/buttonDismiss"
+        android:paddingRight="15dp"
+        android:textSize="40dp"
+        android:text="RM99.99"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold" />
     <Button
-        android:id="@+id/buttonDone"
+        android:id="@+id/buttonDismiss"
         android:layout_width="match_parent"
+        android:text="Dismiss"
+        android:padding="15dp"
+        android:layout_margin="15dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:background="@color/colorAccent"
-        android:text="DONE"
-        android:textColor="@color/cardBackground"
-        android:textStyle="bold"/>
+        android:onClick="closeButtonClicked"/>
 
-    <LinearLayout
-        android:id="@+id/editStateButtons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:orientation="horizontal"
-        android:visibility="invisible">
-        <Button
-            android:id="@+id/buttonCancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorAccent"
-            android:text="Cancel"
-            android:textColor="@color/cardBackground"
-            android:textStyle="bold" />
-        <Button
-            android:id="@+id/buttonDoneEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:background="@color/colorPrimary"
-            android:text="Done"
-            android:textColor="@color/cardBackground"
-            android:textStyle="bold" />
-    </LinearLayout>
 </RelativeLayout>

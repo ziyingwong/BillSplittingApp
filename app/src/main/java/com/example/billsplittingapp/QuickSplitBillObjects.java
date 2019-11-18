@@ -6,6 +6,7 @@ import com.google.firebase.firestore.PropertyName;
 import com.google.firebase.firestore.model.value.TimestampValue;
 
 import java.util.List;
+import java.util.Map;
 
 public class QuickSplitBillObjects {
     Timestamp createTime;
@@ -13,17 +14,19 @@ public class QuickSplitBillObjects {
     List<String> splitWith;
     String status;
     String billName;
+    String billId;
 
     public QuickSplitBillObjects() {
 
     }
 
-    public QuickSplitBillObjects(Timestamp createTime, String owner, List<String> splitWith, String status, CollectionReference items, String billName) {
+    public QuickSplitBillObjects(Timestamp createTime, String owner, List<String> splitWith, String status, CollectionReference items, String billName, String billId) {
         this.createTime = createTime;
         this.owner = owner;
         this.splitWith = splitWith;
         this.status = status;
         this.billName = billName;
+        this.billId = billId;
     }
 
     @PropertyName("createTime")
@@ -52,6 +55,11 @@ public class QuickSplitBillObjects {
         return billName;
     }
 
+    @PropertyName("billId")
+    public String getBillId() {
+        return billId;
+    }
+
     public void setCreateTime(Timestamp time) {
         this.createTime = time;
     }
@@ -74,15 +82,15 @@ public class QuickSplitBillObjects {
     }
 }
 
-class QuickSplitItems {
+class QuickSplitItemsPrice {
     double price;
     String name;
 
-    public QuickSplitItems() {
+    public QuickSplitItemsPrice() {
 
     }
 
-    public QuickSplitItems(String name, double price) {
+    public QuickSplitItemsPrice(String name, double price) {
         this.name = name;
         this.price = price;
 
@@ -99,6 +107,31 @@ class QuickSplitItems {
     }
 }
 
+class QuickSplitItemsPortion {
+    long portion;
+    String name;
+
+    public QuickSplitItemsPortion() {
+
+    }
+
+    public QuickSplitItemsPortion(String name, long portion) {
+        this.name = name;
+        this.portion = portion;
+
+    }
+
+    @PropertyName("Field")
+    public String getName() {
+        return name;
+    }
+
+    @PropertyName("Value")
+    public long getPortion() {
+        return portion;
+    }
+}
+
 class QuickSplitMemberStatus {
     static QuickSplitMemberStatus status;
     public static int NOTHING_SELECTED = 1;
@@ -109,5 +142,73 @@ class QuickSplitMemberStatus {
 
     }
 
+    public static QuickSplitMemberStatus getInstance() {
+        if (status == null) {
+            status = new QuickSplitMemberStatus();
+        }
+        return status;
+    }
+
+    public static String getStatusInString(int statusCode) {
+        if (statusCode == NOTHING_SELECTED) {
+            return "Pending";
+        } else if (statusCode == SELECTED_ITEM) {
+            return "Done";
+        } else if (statusCode == PAID) {
+            return "Paid";
+        } else {
+            return "Unknow state";
+        }
+    }
+
 }
+
+class QuickSplitDebtor {
+    Map<String, Double> itemPortion;
+    int status;
+    String displayName;
+    String uid;
+    Double amount;
+
+    public QuickSplitDebtor() {
+
+    }
+
+    @PropertyName("uid")
+    public String getUid() {
+        return uid;
+    }
+
+    @PropertyName("status")
+    public int getStatus() {
+        return status;
+    }
+
+    @PropertyName("itemPortion")
+    public Map<String, Double> getItemPortion() {
+        return itemPortion;
+    }
+
+    @PropertyName("displayName")
+    public String getDisplayName() {
+        return displayName;
+    }
+
+}
+
+class QuickSplitInvoiceItem {
+    Long totalPortion;
+    Long dividePortion;
+    Double price;
+    String itemName;
+    Double divideAmount;
+
+    public QuickSplitInvoiceItem() {
+
+    }
+
+}
+
+
+
 

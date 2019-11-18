@@ -44,6 +44,10 @@
             android:name=".QuickSplitCreditorAdd"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".QuickSplitGeneralEnterShare" />
+        <activity android:name=".QuickSplitCreditorDebtorStatusPending" />
+        <activity android:name=".QuickSplitGeneralViewEnteredShare" />
+        <activity android:name=".QuickSplitCreditorDebtorStatusUnpaid" />
+        <activity android:name=".QuickSplitDebtorViewInvoice" />
 
         <meta-data
             android:name="preloaded_fonts"

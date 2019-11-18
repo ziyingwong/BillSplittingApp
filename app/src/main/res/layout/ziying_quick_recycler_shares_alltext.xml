@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/totalText"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/box_background"
+        android:orientation="vertical">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/itemName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="bottom"
+                android:maxWidth="45dp"
+                android:padding="5dp"
+                android:text="Item"
+                android:textSize="15dp" />
+
+
+            <TextView
+                android:id="@+id/portionEt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.05"
+                android:gravity="bottom"
+                android:text="0"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textSize="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.05"
+                android:gravity="center_vertical"
+                android:text="share(s)"
+                android:textSize="8dp" />
+
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
