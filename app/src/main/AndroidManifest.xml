@@ -24,7 +24,6 @@
             android:name=".ResetPasswordActivity"
             android:exported="true" />
         <activity android:name=".ReminderActivity" />
-        <activity android:name=".MyFriendsActivity" />
         <activity android:name=".AddFriendActivity" />
         <activity
             android:name=".RegisterActivity"

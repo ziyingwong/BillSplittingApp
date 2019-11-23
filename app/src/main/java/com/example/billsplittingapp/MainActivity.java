@@ -38,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final Fragment quickSplit = new QuickSplitMain();
+        final Fragment contactList = new MyFriendsActivity();
         final BottomNavigationView menu = findViewById(R.id.navigation);
+
+
 
         /*Drawer Menu */
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -94,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_contact_list:
                         setTitle("Contact");
+                        selectFragment = contactList;
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, selectFragment).commit();
                         break;
                     case R.id.navigation_group:
                         setTitle("Group");
