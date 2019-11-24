@@ -75,27 +75,7 @@ private TextView t1, t2;
     }
 
 
-    public void addFriend(String name, String status){
-        MyFriendsObject object = new MyFriendsObject(name, status);
 
-                    firestore.collection("contactList")
-                            .document(auth.getUid())
-                            .collection("friend")
-                            .add(object)
-                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                               @Override
-                               public void onComplete(@NonNull Task<DocumentReference> task) {
-                                    if(task.isSuccessful()){
-                                        Log.e("TAG", "onComplete: Success" );
-                                    } else{
-                                        Log.e("TAG", "onComplete: Failure" );
-                                    }
-                               }
-                           });
-//                }
-    }
-//        });
-//    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {

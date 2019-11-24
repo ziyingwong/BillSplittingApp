@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
 private FirebaseAuth auth;
@@ -48,8 +51,8 @@ private ProgressBar progressBar;
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = etemail.getText().toString().trim();
-                String name = etname.getText().toString().trim();
+                final String email = etemail.getText().toString().trim();
+                final String name = etname.getText().toString().trim();
                 String pw = etpw.getText().toString().trim();
                 String confirmpw = etconfirmpw.getText().toString().trim();
                 if(email.equals("") || name.equals("")
@@ -78,6 +81,7 @@ private ProgressBar progressBar;
                                                         "Authentication Fail"
                                                                 +task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                             } else{
+                                                registerUser(auth.getUid(),email,name);
                                                 Intent i = new Intent(RegisterActivity.this
                                                         ,LoginActivity.class);
                                                 startActivity(i);
@@ -88,5 +92,24 @@ private ProgressBar progressBar;
                 }
             }
         });
+    }
+
+    public void registerUser(String uid, String email, String name){
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        RegisterUserObject object = new RegisterUserObject(uid,email,name);
+        firestore.collection("contactList")
+                .document(uid)
+                .set(object)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.e("TAG", "onComplete: Register Success" );
+                        }
+                        else{
+                            Log.e("TAG", "onComplete: Register Fail" );
+                        }
+                    }
+                });
     }
 }
