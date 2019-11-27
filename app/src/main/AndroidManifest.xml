@@ -47,6 +47,9 @@
         <activity android:name=".QuickSplitGeneralViewEnteredShare" />
         <activity android:name=".QuickSplitCreditorDebtorStatusUnpaid" />
         <activity android:name=".QuickSplitDebtorViewInvoice" />
+        <activity android:name=".Groups"/>
+        <activity android:name=".GroupsAddNewGroup"/>
+        <activity android:name=".GroupsAddNewFriendInNewGroup"/>
 
         <meta-data
             android:name="preloaded_fonts"
