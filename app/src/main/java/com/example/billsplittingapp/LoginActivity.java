@@ -52,8 +52,10 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(!task.isSuccessful()){
                                         Toast.makeText(getApplicationContext(),
-                                                "Login Fail", Toast.LENGTH_SHORT)
+                                                "Wrong Password", Toast.LENGTH_SHORT)
                                                 .show();
+                                        progressBar.setVisibility(View.GONE);
+                                        btnlogin.setVisibility(View.VISIBLE);
                                     } else {
                                         Toast.makeText(getApplicationContext(),
                                                 "Login Success", Toast.LENGTH_SHORT)

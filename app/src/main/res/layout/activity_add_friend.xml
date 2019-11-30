@@ -19,6 +19,8 @@
         android:orientation="horizontal">
 
         <EditText
+            android:hint="Search User By Email"
+            android:inputType="textEmailAddress"
             android:id="@+id/search_textView"
             android:layout_width="match_parent"
             android:layout_height="65dp"
@@ -28,10 +30,11 @@
             android:textSize="15sp" />
 
         <Button
-            android:layout_width="50dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:layout_marginStart="5dp"
             android:background="@drawable/ic_search"
             android:onClick="onSearchFriend"
             android:padding="60dp" />
