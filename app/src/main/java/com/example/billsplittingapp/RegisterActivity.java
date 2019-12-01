@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -72,15 +74,15 @@ private ProgressBar progressBar;
                                     new OnCompleteListener<AuthResult>() {
                                         @Override
                                         public void onComplete(@NonNull Task<AuthResult> task) {
-                                            Toast.makeText(RegisterActivity.this,
-                                                    "Register Success"
-                                            , Toast.LENGTH_SHORT).show();
                                             progressBar.setVisibility(View.GONE);
                                             if(!task.isSuccessful()){
                                                 Toast.makeText(RegisterActivity.this,
-                                                        "Authentication Fail"
-                                                                +task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                                        "Email is Registered, Please Proceed to Login"
+                                                                , Toast.LENGTH_SHORT).show();
                                             } else{
+                                                Toast.makeText(RegisterActivity.this,
+                                                        "Register Success"
+                                                        , Toast.LENGTH_SHORT).show();
                                                 registerUser(auth.getUid(),email,name);
                                                 Intent i = new Intent(RegisterActivity.this
                                                         ,LoginActivity.class);
@@ -97,6 +99,15 @@ private ProgressBar progressBar;
     public void registerUser(String uid, String email, String name){
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         RegisterUserObject object = new RegisterUserObject(uid,email,name);
+        FirebaseUser user = auth.getCurrentUser();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name).build();
+        user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.e("TAG", "onComplete: set display name succeeded" );
+            }
+        });
         firestore.collection("contactList")
                 .document(uid)
                 .set(object)

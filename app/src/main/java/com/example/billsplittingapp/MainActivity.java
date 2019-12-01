@@ -42,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
         final Fragment groups = new Groups();
         final BottomNavigationView menu = findViewById(R.id.navigation);
 
+        setTitle("Contact");
+        selectFragment = contactList;
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, selectFragment).commit();
+
 
 
         /*Drawer Menu */

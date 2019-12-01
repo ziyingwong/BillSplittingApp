@@ -66,7 +66,7 @@ public class AddFriendActivity extends AppCompatActivity {
                 List<RegisterUserObject> objects = snapshots.toObjects(RegisterUserObject.class);
                 for(RegisterUserObject obj : objects){
                     final String name = obj.getUserName();
-                    String email = obj.getUserEmail();
+                    final String email = obj.getUserEmail();
                     final String uid = obj.getUserUID();
                     Log.e("TAG", "onEvent: name: "+name );
                     Log.e("TAG", "onEvent: name: "+email );
@@ -86,11 +86,10 @@ public class AddFriendActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             progressBar.setVisibility(View.VISIBLE);
                             btnAdd.setVisibility(View.GONE);
-                            addFriend(uid,name);
+                            addFriend(uid,email,name);
+                            addFriend2(uid);
                             progressBar.setVisibility(View.GONE);
                             btnAdded.setVisibility(View.VISIBLE);
-                            Intent i = new Intent(AddFriendActivity.this,MainActivity.class);
-                            startActivity(i);
                         }
                     });
                 }
@@ -99,8 +98,8 @@ public class AddFriendActivity extends AppCompatActivity {
         });
     }
 
-    public void addFriend(String uid, String name){
-        MyFriendsObject object = new MyFriendsObject(name, "Settled Up");
+    public void addFriend(String uid, String email, String name){
+        MyFriendsObject object = new MyFriendsObject(name,email, "Settled Up");
         firestore.collection("contactList")
                 .document(auth.getUid())
                 .collection("friend")
@@ -116,5 +115,34 @@ public class AddFriendActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public void addFriend2(String uid){
+        MyFriendsObject object = new MyFriendsObject(auth.getCurrentUser().getDisplayName()
+                ,auth.getCurrentUser().getEmail(),
+                "Settled Up");
+        firestore.collection("contactList")
+                .document(uid)
+                .collection("friend")
+                .document(auth.getUid())
+                .set(object)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.e("TAG", "onComplete: Success" );
+                        } else{
+                            Log.e("TAG", "onComplete: Failure" );
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(AddFriendActivity.this,MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }
