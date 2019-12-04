@@ -86,8 +86,12 @@ public class AddFriendActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             progressBar.setVisibility(View.VISIBLE);
                             btnAdd.setVisibility(View.GONE);
-                            addFriend(uid,email,name);
-                            addFriend2(uid);
+                            if(uid.equals(auth.getUid())){
+                                Toast.makeText(getApplicationContext(),"Invalid Action",Toast.LENGTH_SHORT).show();
+                            } else{
+                                addFriend(uid,email,name);
+                                addFriend2(uid);
+                            }
                             progressBar.setVisibility(View.GONE);
                             btnAdded.setVisibility(View.VISIBLE);
                         }
