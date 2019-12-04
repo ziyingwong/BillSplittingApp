@@ -5,9 +5,8 @@
         android:color="@android:color/white"
         />
     <stroke
-        android:width="0dp"/>
-
+        android:width="0.2dp" />
     <corners
-        android:radius="10dp"/>
+        android:radius="3dp"/>
 
 </shape>

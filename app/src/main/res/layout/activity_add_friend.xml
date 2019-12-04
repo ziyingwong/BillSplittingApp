@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddFriendActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:hint="Search User By Email"
+            android:inputType="textEmailAddress"
+            android:id="@+id/search_textView"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_weight="2"
+            android:background="@drawable/border"
+            android:padding="20dp"
+            android:textSize="15sp" />
+
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/ic_search"
+            android:onClick="onSearchFriend"
+            android:padding="60dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/layout_add_friend"/>
+    </LinearLayout>
+
+</ScrollView>

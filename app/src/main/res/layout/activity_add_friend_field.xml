@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="40dp"
+    android:layout_marginEnd="20dp"
+    android:background="@drawable/light_theme_border"
+    android:orientation="vertical"
+    android:padding="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/result_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:textStyle="bold"
+        android:padding="20dp"
+        android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/add_friend_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|end"
+            android:background="@drawable/ic_add"/>
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|end"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/added_friend_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|end"
+            android:background="@drawable/ic_done"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/result_email_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
+        android:textSize="15sp"/>
+
+
+
+
+
+</LinearLayout>
