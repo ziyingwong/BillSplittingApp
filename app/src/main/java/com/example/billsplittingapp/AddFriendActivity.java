@@ -99,7 +99,7 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     public void addFriend(String uid, String email, String name){
-        MyFriendsObject object = new MyFriendsObject(name,email, "Settled Up");
+        MyFriendsObject object = new MyFriendsObject(uid,name,email, "Settled Up");
         firestore.collection("contactList")
                 .document(auth.getUid())
                 .collection("friend")
@@ -118,7 +118,7 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     public void addFriend2(String uid){
-        MyFriendsObject object = new MyFriendsObject(auth.getCurrentUser().getDisplayName()
+        MyFriendsObject object = new MyFriendsObject(auth.getUid(),auth.getCurrentUser().getDisplayName()
                 ,auth.getCurrentUser().getEmail(),
                 "Settled Up");
         firestore.collection("contactList")
