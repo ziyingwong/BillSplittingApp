@@ -60,6 +60,10 @@
         <activity android:name=".Groups"/>
         <activity android:name=".GroupsAddNewGroup"/>
         <activity android:name=".GroupsAddNewFriendInNewGroup"/>
+        <activity android:name=".GroupsDetails"/>
+        <activity android:name=".GroupsDetailsSetting"/>
+        <activity android:name=".GroupsBalances"/>
+        <activity android:name=".GroupsAddNewPeopleInSetting"/>
 
         <meta-data
             android:name="preloaded_fonts"
