@@ -70,6 +70,7 @@ public class MyFriendsActivity extends Fragment {
                             final String name = object.getFriendName();
                             final String status = object.getFriendStatus();
                             final String email = object.getFriendEmail();
+                            final String uid = object.getFriendUid();
                             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                             final View rowView = inflater.inflate(R.layout.activity_my_friends_field, linearLayout, false);
                             linearLayout.addView(rowView, linearLayout.getChildCount() - 1);
@@ -88,6 +89,7 @@ public class MyFriendsActivity extends Fragment {
                                     i.putExtra("name", name);
                                     i.putExtra("status", status);
                                     i.putExtra("email", email);
+                                    i.putExtra("uid", uid);
                                     Log.e("TAG", "MyFriendsActivityClass: email is: " + email);
                                     startActivity(i);
                                 }
