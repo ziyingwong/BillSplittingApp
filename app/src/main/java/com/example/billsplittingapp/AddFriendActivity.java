@@ -86,8 +86,12 @@ public class AddFriendActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             progressBar.setVisibility(View.VISIBLE);
                             btnAdd.setVisibility(View.GONE);
-                            addFriend(uid,email,name);
-                            addFriend2(uid);
+                            if(uid.equals(auth.getUid())){
+                                Toast.makeText(getApplicationContext(),"Invalid Action",Toast.LENGTH_SHORT).show();
+                            } else{
+                                addFriend(uid,email,name);
+                                addFriend2(uid);
+                            }
                             progressBar.setVisibility(View.GONE);
                             btnAdded.setVisibility(View.VISIBLE);
                         }
@@ -99,7 +103,7 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     public void addFriend(String uid, String email, String name){
-        MyFriendsObject object = new MyFriendsObject(name,email, "Settled Up");
+        MyFriendsObject object = new MyFriendsObject(uid,name,email, "Settled Up");
         firestore.collection("contactList")
                 .document(auth.getUid())
                 .collection("friend")
@@ -118,7 +122,7 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     public void addFriend2(String uid){
-        MyFriendsObject object = new MyFriendsObject(auth.getCurrentUser().getDisplayName()
+        MyFriendsObject object = new MyFriendsObject(auth.getUid(),auth.getCurrentUser().getDisplayName()
                 ,auth.getCurrentUser().getEmail(),
                 "Settled Up");
         firestore.collection("contactList")
