@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Fragment quickSplit = new QuickSplitMain();
         final Fragment contactList = new MyFriendsActivity();
+        final Fragment groups = new Groups();
         final BottomNavigationView menu = findViewById(R.id.navigation);
 
         setTitle("Contact");
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
                                 .replace(R.id.fragment_container, selectFragment).commit();
                         break;
                     case R.id.navigation_group:
+                        selectFragment = groups;
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectFragment).commit();
                         setTitle("Group");
                         break;
                     case R.id.navigation_quick_split:

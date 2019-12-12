@@ -42,7 +42,7 @@ import java.util.Map;
 
 public class ReminderActivity extends AppCompatActivity {
     private TextView nameTextView,statusTextView;
-    private String name, status, email;
+    private String name, status, email, uid;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private static String URL;
@@ -78,6 +78,7 @@ public class ReminderActivity extends AppCompatActivity {
                 name = extras.getString("name");
                 status = extras.getString("status");
                 email = extras.getString("email");
+                uid = extras.getString("uid");
                 Log.e("TAG", "onCreate: email from extra"+email );
                 nameTextView.setText(name);
                 statusTextView.setText(status);
@@ -140,7 +141,7 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     public void onSettledUp(View v){
-        MyFriendsObject object = new MyFriendsObject(name
+        MyFriendsObject object = new MyFriendsObject(uid, name
                 ,email,
                 "Settled Up");
         CollectionReference collectionReference =
