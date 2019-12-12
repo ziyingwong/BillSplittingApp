@@ -14,16 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.DocumentSnapshot;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +30,7 @@ public class GroupsDetails extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
     GroupsPaymentAdapter adapter;
+    Map<String, Double> map;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +45,17 @@ public class GroupsDetails extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(GroupsDetails.this, GroupsDetailsSetting.class);
                 intent.putExtra("groupName", groupName);
+                intent.putExtra("groupId", groupId);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+            }
+        });
+
+        Button buttonSettleUp = findViewById(R.id.buttonSettleUp);
+        buttonSettleUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupsDetails.this, GroupsSettleUp.class);
                 intent.putExtra("groupId", groupId);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
@@ -77,7 +86,8 @@ public class GroupsDetails extends AppCompatActivity {
         groupBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(GroupsDetails.this, GroupsBalances.class);
+//                Intent intent = new Intent(GroupsDetails.this, GroupsBalances.class);
+                Intent intent = new Intent(GroupsDetails.this, GroupDebtDetailsList.class);
                 intent.putExtra("groupName", groupName);
                 intent.putExtra("groupId", groupId);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -86,5 +96,86 @@ public class GroupsDetails extends AppCompatActivity {
         });
 
 
+    }
+
+    public void calculateTotal() {
+
+        String uid = auth.getCurrentUser().getUid();
+        Query query = db.collection("Groups").whereArrayContains("userArray", uid);
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots.size() > 0) {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        map = (HashMap) doc.get("user");
+                    }
+                }
+            }
+        });
+        ArrayList<UserStringValue> positive = new ArrayList<>();
+        ArrayList<UserStringValue> negative = new ArrayList<>();
+        ArrayList<UserDebtProfile> complete = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : map.entrySet()) {
+            if (entry.getValue() > 0) {
+                positive.add(new UserStringValue(entry.getKey(), entry.getValue()));
+            } else {
+                negative.add(new UserStringValue(entry.getKey(), entry.getValue()));
+            }
+            complete.add(new UserDebtProfile(entry.getKey()));
+        }
+        int i = 0, j = 0;
+        while (i < positive.size()) {
+            if ((negative.get(j).value * -1) > positive.get(i).value) {
+                negative.get(j).value += positive.get(i).value;
+                for (UserDebtProfile usd : complete) {
+                    if (positive.get(i).key.equals(usd.key)) {
+                        usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
+                    } else if (negative.get(i).key.equals(usd.key)) {
+                        usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
+                    }
+                }
+                i++;
+            } else if ((negative.get(j).value * -1) == positive.get(i).value) {
+                for (UserDebtProfile usd : complete) {
+                    if (positive.get(i).key.equals(usd.key)) {
+                        usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
+                    } else if (negative.get(i).key.equals(usd.key)) {
+                        usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
+                    }
+                }
+                i++;
+                j++;
+            } else {
+                positive.get(i).value += negative.get(j).value;
+                for (UserDebtProfile usd : complete) {
+                    if (positive.get(i).key.equals(usd.key)) {
+                        usd.pinjam.add(new UserStringValue(negative.get(j).key, negative.get(i).value * -1));
+                    } else if (negative.get(i).key.equals(usd.key)) {
+                        usd.hutang.add(new UserStringValue(positive.get(i).key, negative.get(i).value * -1));
+                    }
+                }
+                j++;
+            }
+        }
+    }
+}
+
+class UserDebtProfile {
+    String key;
+    ArrayList<UserStringValue> hutang = new ArrayList<>();
+    ArrayList<UserStringValue> pinjam = new ArrayList<>();
+
+    UserDebtProfile(String k) {
+        this.key = k;
+    }
+}
+
+class UserStringValue {
+    String key;
+    Double value;
+
+    UserStringValue(String k, Double v) {
+        this.key = k;
+        this.value = v;
     }
 }

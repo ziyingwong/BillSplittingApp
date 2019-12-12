@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -57,13 +57,16 @@
         <activity android:name=".QuickSplitGeneralViewEnteredShare" />
         <activity android:name=".QuickSplitCreditorDebtorStatusUnpaid" />
         <activity android:name=".QuickSplitDebtorViewInvoice" />
-        <activity android:name=".Groups"/>
-        <activity android:name=".GroupsAddNewGroup"/>
-        <activity android:name=".GroupsAddNewFriendInNewGroup"/>
-        <activity android:name=".GroupsDetails"/>
-        <activity android:name=".GroupsDetailsSetting"/>
-        <activity android:name=".GroupsBalances"/>
-        <activity android:name=".GroupsAddNewPeopleInSetting"/>
+        <activity android:name=".Groups" />
+        <activity android:name=".GroupsAddNewGroup" />
+        <activity android:name=".GroupsAddNewFriendInNewGroup" />
+        <activity android:name=".GroupsDetails" />
+        <activity android:name=".GroupsDetailsSetting" />
+        <activity android:name=".GroupsBalances" />
+        <activity android:name=".GroupDebtDetailsList" />
+        <activity android:name=".GroupsAddNewPeopleInSetting" />
+        <activity android:name=".GroupsSettleUp"/>
+        <activity android:name=".GroupsSettleUpPay"/>
 
         <meta-data
             android:name="preloaded_fonts"

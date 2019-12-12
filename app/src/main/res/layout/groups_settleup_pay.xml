@@ -9,34 +9,52 @@
         android:id="@+id/imageView"
         android:layout_width="104dp"
         android:layout_height="91dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="104dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:src="@drawable/total_balance"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Christine paid Chia Jee"
-        android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.079" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35">
+
+        <TextView
+            android:id="@+id/payerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Payer"
+            android:paddingBottom="10dp"
+            android:textSize="25dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="paying to"
+            android:paddingBottom="10dp"
+            android:textSize="25dp" />
+
+        <TextView
+            android:id="@+id/payingdetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Paying Details"
+            android:textSize="25dp" />
+
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/textView3"
@@ -48,17 +66,17 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:text="MYR"
+        android:text="RM"
         android:textSize="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/amoundPaid"
+        app:layout_constraintEnd_toStartOf="@+id/amountPaid"
         app:layout_constraintHorizontal_bias="0.745"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintVertical_bias="0.61" />
 
     <EditText
-        android:id="@+id/amoundPaid"
+        android:id="@+id/amountPaid"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -68,11 +86,24 @@
         android:ems="10"
         android:inputType="numberDecimal"
         android:textSize="40dp"
+        app:layout_constraintVertical_bias="0.61"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/paybutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="72dp"
+        android:text="Pay"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -84,15 +115,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/background"
             android:drawableLeft="@drawable/calender"
-            android:text="Today" />
+            android:enabled="false"
+            android:text="Today"
+            android:textColor="@color/colorPrimary" />
 
         <Button
-            android:id="@+id/button7"
+            android:id="@+id/groupName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/background"
             android:drawableLeft="@drawable/group"
-            android:text="Coursemate" />
+            android:enabled="false"
+            android:text="Group Name"
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

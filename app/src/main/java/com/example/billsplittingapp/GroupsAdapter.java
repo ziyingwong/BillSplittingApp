@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,13 +49,19 @@ public class GroupsAdapter extends FirestoreRecyclerAdapter<GroupsObject, Groups
     protected void onBindViewHolder(final ViewHolder viewHolder, final int i, final GroupsObject groupsObjects) {
         arrayListTotalAmount.add(groupsObjects.user.get(auth.getCurrentUser().getUid()));
         viewHolder.groupName.setText(groupsObjects.groupName);
-        String stringAmountFormat = String.format("%,.2f", groupsObjects.user.get(auth.getCurrentUser().getUid()));
-        viewHolder.amount.setText("RM" + stringAmountFormat);
+
 
         if (groupsObjects.user.get(auth.getCurrentUser().getUid()) < 0) {
             viewHolder.amount.setTextColor(Color.parseColor("#D81B60"));
+            String stringAmountFormat = String.format("%,.2f", (groupsObjects.user.get(auth.getCurrentUser().getUid())*-1));
+            viewHolder.amount.setText("RM" + stringAmountFormat);
         } else if (groupsObjects.user.get(auth.getCurrentUser().getUid()) > 0) {
             viewHolder.amount.setTextColor(Color.parseColor("#45B39D"));
+            String stringAmountFormat = String.format("%,.2f", groupsObjects.user.get(auth.getCurrentUser().getUid()));
+            viewHolder.amount.setText("RM" + stringAmountFormat);
+        } else {
+            String stringAmountFormat = String.format("%,.2f", groupsObjects.user.get(auth.getCurrentUser().getUid()));
+            viewHolder.amount.setText("RM" + stringAmountFormat);
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -333,7 +340,6 @@ class GroupsSettingAdapter extends RecyclerView.Adapter<GroupsSettingAdapter.Vie
                     Double doubleAmount = Double.parseDouble(stringAmount);
                     String stringAmountFormat = String.format("%,.2f", doubleAmount);
                     holder.amountowed.setText("RM" + stringAmountFormat);
-//                    GroupsSettingFriendArray.getInstance().settingList.add(items.get(position));
 
                     if (doubleAmount > 0) {
                         holder.amountowed.setTextColor(Color.parseColor("#45B39D"));
@@ -376,58 +382,6 @@ class GroupsSettingAdapter extends RecyclerView.Adapter<GroupsSettingAdapter.Vie
     }
 }
 
-//class GroupsSettingFriendAdapter extends RecyclerView.Adapter<GroupsSettingFriendAdapter.ViewHolder> {
-//    ArrayList<GroupsAmountUserObject> items;
-//    FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//    public GroupsSettingFriendAdapter(ArrayList<GroupsAmountUserObject> items) {
-//        this.items = items;
-//    }
-//
-//    @NonNull
-//    @Override
-//    public GroupsSettingFriendAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.groups_card_addfriend_newgroup, parent, false);
-//        return new ViewHolder(v);
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull GroupsSettingFriendAdapter.ViewHolder holder, int position) {
-//        GroupsAmountUserObject user = items.get(position);
-//        db.collection("contactList").document(user.uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                holder.friendName.setText(documentSnapshot.get("userName").toString());
-//                holder.friendEmail.setText(documentSnapshot.get("userEmail").toString());
-//                for (int i = 0; i < GroupsSettingFriendArray.getInstance().settingList.size(); i++) {
-//                    if(user.uid.equals(GroupsSettingFriendArray.getInstance().settingList.get(i).uid)) {
-//                        holder.checkBox.setChecked(true);
-//                    }
-//                }
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return items.size();
-//    }
-//
-//    class ViewHolder extends RecyclerView.ViewHolder {
-//        TextView friendName;
-//        TextView friendEmail;
-//        CheckBox checkBox;
-//
-//        public ViewHolder(@NonNull View itemView) {
-//            super(itemView);
-//            friendName = itemView.findViewById(R.id.groupAddFriendName);
-//            friendEmail = itemView.findViewById(R.id.groupAddFriendEmail);
-//            checkBox = itemView.findViewById(R.id.checkBox);
-//        }
-//    }
-//}
-
-
 class GroupsBalancesAdapter extends RecyclerView.Adapter<GroupsBalancesAdapter.ViewHolder> {
     ArrayList<GroupsAmountUserObject> items;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -453,14 +407,15 @@ class GroupsBalancesAdapter extends RecyclerView.Adapter<GroupsBalancesAdapter.V
                     Object boxAmount = user.amount;
                     String stringAmount = boxAmount.toString();
                     Double doubleAmount = Double.parseDouble(stringAmount);
-                    String stringAmountFormat = String.format("%,.2f", doubleAmount);
 
                     String username = documentSnapshot.get("userName").toString();
 
                     if (doubleAmount > 0) {
+                        String stringAmountFormat = String.format("%,.2f", doubleAmount);
                         holder.balanceText.setTextColor(Color.parseColor("#45B39D"));
                         holder.balanceText.setText(username + " gets back RM" + stringAmountFormat + " in total");
                     } else if (doubleAmount < 0) {
+                        String stringAmountFormat = String.format("%,.2f", doubleAmount*-1);
                         holder.balanceText.setTextColor(Color.parseColor("#D81B60"));
                         holder.balanceText.setText(username + " owes RM" + stringAmountFormat + " in total");
                     } else {
@@ -489,3 +444,235 @@ class GroupsBalancesAdapter extends RecyclerView.Adapter<GroupsBalancesAdapter.V
 
     }
 }
+
+//ziying
+
+class GroupsDebtDetailsAdapter extends RecyclerView.Adapter<GroupsDebtDetailsAdapter.ViewHolder> {
+    ArrayList<GroupsAmountUserObject> items;
+    ArrayList<UserDebtProfile> debtProfiles;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    boolean opened = false;
+    String username = "";
+
+    public GroupsDebtDetailsAdapter(ArrayList<GroupsAmountUserObject> items, ArrayList<UserDebtProfile> debtProfiles) {
+        this.items = items;
+        this.debtProfiles = debtProfiles;
+
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.groups_card_debt, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        LinearLayout layout = new LinearLayout(holder.linearLayout.getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        ViewGroup.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        for (UserDebtProfile user : debtProfiles) {
+            if (user.key.equals(items.get(position).uid)) {
+                Log.e("mytag", "hutang :" + user.hutang);
+                Log.e("mytag", "pinjam :" + user.pinjam);
+
+                if (holder.linearLayout.getChildCount() < user.pinjam.size() || holder.linearLayout.getChildCount() < user.hutang.size()) {
+
+                    for (UserStringValue detail : user.hutang) {
+
+                        View mView = LayoutInflater.from(holder.linearLayout.getContext()).inflate(R.layout.groups_card_debt_expend, holder.linearLayout, false);
+                        TextView userName = mView.findViewById(R.id.userName);
+
+                        db.collection("contactList").document(detail.key).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    username = documentSnapshot.get("userName").toString();
+                                    String stringAmountFormat = String.format("%,.2f", detail.value);
+                                    userName.setText("Owing " + username + " RM" + stringAmountFormat);
+                                }
+
+                            }
+                        });
+                        layout.addView(mView);
+
+                    }
+                    for (UserStringValue detail : user.pinjam) {
+                        View mView = LayoutInflater.from(holder.linearLayout.getContext()).inflate(R.layout.groups_card_debt_expend, holder.linearLayout, false);
+                        TextView userName = mView.findViewById(R.id.userName);
+
+                        db.collection("contactList").document(detail.key).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    username = documentSnapshot.get("userName").toString();
+                                    String stringAmountFormat = String.format("%,.2f", detail.value);
+                                    userName.setText("Getting back RM" + stringAmountFormat + " from " + username);
+                                }
+
+                            }
+                        });
+                        layout.addView(mView);
+                    }
+
+
+                    holder.linearLayout.addView(layout, lp);
+                    holder.linearLayout.setVisibility(View.GONE);
+                }
+            }
+        }
+        GroupsAmountUserObject user = items.get(position);
+        db.collection("contactList").document(user.uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Object boxAmount = user.amount;
+                    String stringAmount = boxAmount.toString();
+                    Double doubleAmount = Double.parseDouble(stringAmount);
+                    String stringAmountFormat = String.format("%,.2f", doubleAmount);
+
+                    String username = documentSnapshot.get("userName").toString();
+
+                    if (doubleAmount > 0) {
+                        holder.balanceText.setTextColor(Color.parseColor("#45B39D"));
+                        holder.balanceText.setText(username + " gets back RM" + stringAmountFormat + " in total");
+                    } else if (doubleAmount < 0) {
+                        holder.balanceText.setTextColor(Color.parseColor("#D81B60"));
+                        holder.balanceText.setText(username + " owes RM" + stringAmountFormat + " in total");
+                    } else {
+                        holder.balanceText.setText(username + " is being settled up");
+                    }
+
+                }
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (opened) {
+                    opened = false;
+                    holder.linearLayout.setVisibility(View.GONE);
+                } else {
+                    opened = true;
+                    holder.linearLayout.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
+
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView balanceText;
+        LinearLayout linearLayout;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            balanceText = itemView.findViewById(R.id.groupsBalance);
+            linearLayout = itemView.findViewById(R.id.childLayout);
+        }
+
+    }
+}
+
+//class GroupsSettleUpAdapter extends RecyclerView.Adapter<GroupsSettleUpAdapter.ViewHolder> {
+//    ArrayList<GroupsAmountUserObject> items;
+//    ArrayList<UserDebtProfile> debtProfiles;
+//    FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//    public GroupsSettleUpAdapter(ArrayList<GroupsAmountUserObject> items, ArrayList<UserDebtProfile> debtProfiles) {
+//        this.items = items;
+//        this.debtProfiles = debtProfiles;
+//
+//    }
+//
+//    @NonNull
+//    @Override
+//    public GroupsSettleUpAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.groups_card_settleup, parent, false);
+//        return new ViewHolder(v);
+//    }
+//
+//    @Override
+//    public void onBindViewHolder(@NonNull GroupsSettleUpAdapter.ViewHolder holder, int position) {
+//        for (UserDebtProfile user : debtProfiles) {
+//            if (user.key.equals(items.get(position).uid)) {
+//                Log.e("mytag", "hutang :" + user.hutang);
+//                Log.e("mytag", "pinjam :" + user.pinjam);
+//
+//                for (UserStringValue detail : user.hutang) {
+//                    db.collection("contactList").document(detail.key).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                            if (documentSnapshot.exists()) {
+//                                String usernamebox = documentSnapshot.get("userName").toString();
+//                                holder.username.setText(usernamebox);
+//                                String useremailbox = documentSnapshot.get("userEmail").toString();
+//                                holder.useremail.setText(useremailbox);
+//                                String stringAmountFormat = String.format("%,.2f", detail.value);
+//                                holder.amount.setText(stringAmountFormat);
+//                                holder.owe.setText("You owe");
+//                                holder.amount.setTextColor(Color.parseColor("#D81B60"));
+//                                holder.owe.setTextColor(Color.parseColor("#D81B60"));
+//
+//                            }
+//
+//                        }
+//                    });
+//                }
+//                for (UserStringValue detail : user.pinjam) {
+//                    db.collection("contactList").document(detail.key).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                            if (documentSnapshot.exists()) {
+//                                String usernamebox = documentSnapshot.get("userName").toString();
+//                                holder.username.setText(usernamebox);
+//                                String useremailbox = documentSnapshot.get("userEmail").toString();
+//                                holder.useremail.setText(useremailbox);
+//                                String stringAmountFormat = String.format("%,.2f", detail.value);
+//                                holder.amount.setText(stringAmountFormat);
+//                                holder.owe.setText("Owes you");
+//                                holder.amount.setTextColor(Color.parseColor("#45B39D"));
+//                                holder.owe.setTextColor(Color.parseColor("#45B39D"));
+//                            }
+//
+//                        }
+//                    });
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public int getItemCount() {
+//        return items.size();
+//    }
+//
+//    class ViewHolder extends RecyclerView.ViewHolder {
+//        TextView username;
+//        TextView useremail;
+//        TextView owe;
+//        TextView amount;
+//
+//        public ViewHolder(@NonNull View itemView) {
+//            super(itemView);
+//            username = itemView.findViewById(R.id.username);
+//            useremail = itemView.findViewById(R.id.useremail);
+//            owe = itemView.findViewById(R.id.owe);
+//            amount = itemView.findViewById(R.id.amount);
+//        }
+//
+//    }
+//}
+//

@@ -44,7 +44,6 @@ public class Groups extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.groups, container, false);
-        totalAmount = 0.00;
         //addition of total amount
         String uid = auth.getCurrentUser().getUid();
         final TextView totalAmountString = v.findViewById(R.id.groups_totalamount);
@@ -53,6 +52,8 @@ public class Groups extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (queryDocumentSnapshots.size() > 0) {
+                    totalAmount = 0.00;
+
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
                         Map<String, Double> map = (HashMap) doc.get("user");
 
@@ -67,7 +68,7 @@ public class Groups extends Fragment {
                             totalAmountString.setTextColor(Color.parseColor("#D81B60"));
                             totalAmountString.setText("You owe RM");
                         }
-                        String totalAmountBox = String.format("%,.2f", totalAmount);
+                        String totalAmountBox = String.format("%,.2f", (totalAmount*-1));
                         totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
                     }
                 }
