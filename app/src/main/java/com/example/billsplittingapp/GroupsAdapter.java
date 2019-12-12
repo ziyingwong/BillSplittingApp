@@ -415,9 +415,10 @@ class GroupsBalancesAdapter extends RecyclerView.Adapter<GroupsBalancesAdapter.V
                         holder.balanceText.setTextColor(Color.parseColor("#45B39D"));
                         holder.balanceText.setText(username + " gets back RM" + stringAmountFormat + " in total");
                     } else if (doubleAmount < 0) {
-                        String stringAmountFormat = String.format("%,.2f", doubleAmount*-1);
+                        Double doubleAmountNegative = (doubleAmount * -1);
+                        String stringAmountFormatNegative = String.format("%,.2f", doubleAmountNegative);
                         holder.balanceText.setTextColor(Color.parseColor("#D81B60"));
-                        holder.balanceText.setText(username + " owes RM" + stringAmountFormat + " in total");
+                        holder.balanceText.setText(username + " owes RM" + stringAmountFormatNegative + " in total");
                     } else {
                         holder.balanceText.setText(username + " is being settled up");
                     }
