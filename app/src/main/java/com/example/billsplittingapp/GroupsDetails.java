@@ -71,6 +71,7 @@ public class GroupsDetails extends AppCompatActivity {
                 intent.putExtra("groupName", groupName);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
+
             }
         });
 
