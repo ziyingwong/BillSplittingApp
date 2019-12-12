@@ -62,6 +62,18 @@ public class GroupsDetails extends AppCompatActivity {
             }
         });
 
+        Button buttonNewExpenses = findViewById(R.id.buttonNewExpenses);
+        buttonNewExpenses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupsDetails.this, ExpenseAddNew.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra("groupName", groupName);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+            }
+        });
+
         //toolbar
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

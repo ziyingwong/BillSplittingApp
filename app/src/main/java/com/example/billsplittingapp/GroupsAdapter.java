@@ -338,18 +338,22 @@ class GroupsSettingAdapter extends RecyclerView.Adapter<GroupsSettingAdapter.Vie
                     Object boxAmount = user.amount;
                     String stringAmount = boxAmount.toString();
                     Double doubleAmount = Double.parseDouble(stringAmount);
-                    String stringAmountFormat = String.format("%,.2f", doubleAmount);
-                    holder.amountowed.setText("RM" + stringAmountFormat);
 
                     if (doubleAmount > 0) {
+                        String stringAmountFormat = String.format("%,.2f", doubleAmount);
+                        holder.amountowed.setText("RM" + stringAmountFormat);
                         holder.amountowed.setTextColor(Color.parseColor("#45B39D"));
                         holder.owes.setText("gets back");
                         holder.owes.setTextColor(Color.parseColor("#45B39D"));
                     } else if (doubleAmount < 0) {
+                        String stringAmountFormat = String.format("%,.2f", doubleAmount*-1);
+                        holder.amountowed.setText("RM" + stringAmountFormat);
                         holder.amountowed.setTextColor(Color.parseColor("#D81B60"));
                         holder.owes.setText("owes");
                         holder.owes.setTextColor(Color.parseColor("#D81B60"));
                     } else {
+                        String stringAmountFormat = String.format("%,.2f", doubleAmount);
+                        holder.amountowed.setText("RM" + stringAmountFormat);
                         holder.owes.setText("settled up");
                     }
 

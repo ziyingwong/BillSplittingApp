@@ -67,6 +67,7 @@
         <activity android:name=".GroupsAddNewPeopleInSetting" />
         <activity android:name=".GroupsSettleUp"/>
         <activity android:name=".GroupsSettleUpPay"/>
+        <activity android:name=".ExpenseAddNew"/>
 
         <meta-data
             android:name="preloaded_fonts"
