@@ -46,7 +46,7 @@ public class ExpenseAddNew extends AppCompatActivity {
         tvGroupName.setText(groupName);
 
         Intent intent = getIntent();
-        //final HashMap<String, String>[] hashMap = new HashMap[]{(HashMap<String, String>) intent.getSerializableExtra("map")};
+        HashMap<String, String>[] hashMap = new HashMap[]{(HashMap<String, String>) intent.getSerializableExtra("map")};
 
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
