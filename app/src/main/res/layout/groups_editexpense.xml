@@ -38,7 +38,7 @@
                 android:textSize="24sp" />
 
             <EditText
-                android:id="@+id/editText8"
+                android:id="@+id/tvPayer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"

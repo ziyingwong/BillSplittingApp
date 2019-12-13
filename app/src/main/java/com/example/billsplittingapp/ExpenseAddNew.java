@@ -33,7 +33,7 @@ public class ExpenseAddNew extends AppCompatActivity {
         groupName = getIntent().getStringExtra("groupName");
 
         Intent intent = getIntent();
-        HashMap<String, String> hashMap = (HashMap<String, String>) intent.getSerializableExtra("hashMap");
+        HashMap<String, String> hashMap = (HashMap<String, String>) intent.getSerializableExtra("map");
 
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
