@@ -12,7 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +51,6 @@ public class ExpenseAddNew extends AppCompatActivity {
         tvGroupName.setText(groupName);
 
         Intent intent = getIntent();
-        HashMap<String, String>[] hashMap = new HashMap[]{(HashMap<String, String>) intent.getSerializableExtra("map")};
 
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -54,20 +58,26 @@ public class ExpenseAddNew extends AppCompatActivity {
             public void onClick(View view) {
 
                 DocumentReference doc = db.collection("Groups").document();
-                Map<String, String> data = new HashMap<>();
+
+                Map<String, Object> data = new HashMap<>();
+
+                double temp = Double.parseDouble(tvPrice.getText().toString());
 
                 data.put("billId", doc.getId());
                 data.put("billName", tvBillName.getText().toString());
                 data.put("payer", auth.getCurrentUser().getUid());
-                data.put("price", tvPrice.getText().toString());
+                data.put("price", temp);
+                //data.put("splitUser", )
 
                 db.collection("Groups").document(groupId).collection("Payment").document(doc.getId()).set(data);
+                /*
+                Query query = db.collection("Groups").whereArrayContains("userArray", auth.getCurrentUser().getUid());
+                query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-
-                /*double price = Double.parseDouble(tvPrice.getText().toString());
-                if (hashMap[0] == null){
-                    hashMap[0] = new HashMap<>();
-                }*/
+                    }
+                })*/
 
             }
         });
