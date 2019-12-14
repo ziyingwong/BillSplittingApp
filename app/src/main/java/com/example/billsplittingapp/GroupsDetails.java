@@ -1,6 +1,7 @@
 package com.example.billsplittingapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,6 +41,33 @@ public class GroupsDetails extends AppCompatActivity {
         setContentView(R.layout.groups_details);
         final String groupId = getIntent().getStringExtra("groupId");
         final String groupName = getIntent().getStringExtra("groupName");
+
+        String uid = auth.getCurrentUser().getUid();
+        final TextView totalAmountString = findViewById(R.id.groupsDetails);
+
+        db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String,Double> map = (HashMap) documentSnapshot.get("user");
+                Object objectamount = map.get(uid);
+                Double totalAmount = Double.parseDouble(objectamount.toString());
+                if (totalAmount > 0) {
+                    totalAmountString.setTextColor(Color.parseColor("#45B39D"));
+                    totalAmountString.setText("You are owed RM");
+                    String totalAmountBox = String.format("%,.2f", totalAmount);
+                    totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
+                } else if (totalAmount < 0){
+                    totalAmountString.setTextColor(Color.parseColor("#D81B60"));
+                    totalAmountString.setText("You owe RM");
+                    String totalAmountBox = String.format("%,.2f", (totalAmount*-1));
+                    totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
+                } else {
+                    totalAmountString.setTextColor(Color.parseColor("#8E8E8E"));
+                    totalAmountString.setText("You are being settled up");
+                }
+            }
+        });
+
 
         Button groupSettingButton = findViewById(R.id.groupSettingButton);
         groupSettingButton.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +112,7 @@ public class GroupsDetails extends AppCompatActivity {
 
         //recyclerview
         RecyclerView recycler = findViewById(R.id.expenserecycler);
-        Query query = db.collection("Groups").document(groupId).collection("Payment");
+        Query query = db.collection("Groups").document(groupId).collection("Payment").orderBy("createTime", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<GroupsPaymentObject> options = new FirestoreRecyclerOptions.Builder<GroupsPaymentObject>()
                 .setQuery(query, GroupsPaymentObject.class)
                 .build();

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -26,7 +27,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GroupsSettleUpPay extends AppCompatActivity {
@@ -39,7 +42,7 @@ public class GroupsSettleUpPay extends AppCompatActivity {
     String payerName;
     String payeeName;
     String groupName;
-    Double oriamountpayer;
+    DocumentReference doc;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +124,27 @@ public class GroupsSettleUpPay extends AppCompatActivity {
                     }
                 });
 
+                doc = db.collection("Groups").document(groupId).collection("Payment").document();
+                Map<String, Object> data = new HashMap<>();
+                Map<String, Double> userArray = new HashMap<>();
+                List array = new ArrayList();
+
+                userArray.put(payerId, 0.0);
+                userArray.put(payeeId, doubleAmount);
+
+                array.add(payerId);
+                array.add(payeeId);
+
+                data.put("billId", doc.getId());
+                data.put("billName", "Settle Up");
+                data.put("payer", payerId);
+                data.put("price", doubleAmount);
+                data.put("splitUser", array);
+                data.put("splitAmount", userArray);
+                data.put("createTime", Timestamp.now());
+                doc.set(data);
+
+                finish();
             }
         });
     }

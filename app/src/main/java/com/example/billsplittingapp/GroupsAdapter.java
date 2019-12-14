@@ -32,7 +32,9 @@ import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.security.acl.Group;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +55,7 @@ public class GroupsAdapter extends FirestoreRecyclerAdapter<GroupsObject, Groups
 
         if (groupsObjects.user.get(auth.getCurrentUser().getUid()) < 0) {
             viewHolder.amount.setTextColor(Color.parseColor("#D81B60"));
-            String stringAmountFormat = String.format("%,.2f", (groupsObjects.user.get(auth.getCurrentUser().getUid())*-1));
+            String stringAmountFormat = String.format("%,.2f", (groupsObjects.user.get(auth.getCurrentUser().getUid()) * -1));
             viewHolder.amount.setText("RM" + stringAmountFormat);
         } else if (groupsObjects.user.get(auth.getCurrentUser().getUid()) > 0) {
             viewHolder.amount.setTextColor(Color.parseColor("#45B39D"));
@@ -255,7 +257,9 @@ class GroupsPaymentAdapter extends FirestoreRecyclerAdapter<GroupsPaymentObject,
     @Override
     protected void onBindViewHolder(@NonNull GroupsPaymentAdapter.ViewHolder viewHolder, int i, @NonNull GroupsPaymentObject groupsPaymentObject) {
         viewHolder.expensename.setText(groupsPaymentObject.billName);
-        if (groupsPaymentObject.splitUser.contains(auth.getCurrentUser().getUid())) {
+        SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        viewHolder.time.setText(date.format(groupsPaymentObject.getCreateTime().toDate()));
+        if (groupsPaymentObject.getSplitUser().contains(auth.getCurrentUser().getUid())) {
             String splitAmountBox = String.format("%,.2f", groupsPaymentObject.price);
             viewHolder.amountborrowed.setText("RM" + splitAmountBox);
             if (groupsPaymentObject.payer.equals(auth.getCurrentUser().getUid().toString())) {
@@ -270,6 +274,18 @@ class GroupsPaymentAdapter extends FirestoreRecyclerAdapter<GroupsPaymentObject,
         } else {
             viewHolder.lentborrow.setText("not involved");
             viewHolder.amountborrowed.setText("");
+        }
+
+        if (groupsPaymentObject.getBillName().equals("Settle Up")) {
+            if (groupsPaymentObject.getSplitUser().contains(auth.getCurrentUser().getUid())) {
+                if (groupsPaymentObject.payer.equals(auth.getCurrentUser().getUid().toString())) {
+                    viewHolder.lentborrow.setText("You returned");
+                } else {
+                    viewHolder.lentborrow.setText("You received");
+                }
+            } else {
+                viewHolder.lentborrow.setText("not involved");
+            }
         }
 
         String priceBox = String.format("%,.2f", groupsPaymentObject.price);
@@ -300,6 +316,7 @@ class GroupsPaymentAdapter extends FirestoreRecyclerAdapter<GroupsPaymentObject,
         TextView expenseactivity;
         TextView lentborrow;
         TextView amountborrowed;
+        TextView time;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -307,6 +324,7 @@ class GroupsPaymentAdapter extends FirestoreRecyclerAdapter<GroupsPaymentObject,
             expenseactivity = itemView.findViewById(R.id.expensesactivity);
             lentborrow = itemView.findViewById(R.id.lentborrow);
             amountborrowed = itemView.findViewById(R.id.amountborrowed);
+            time = itemView.findViewById(R.id.time);
         }
     }
 }
@@ -346,7 +364,7 @@ class GroupsSettingAdapter extends RecyclerView.Adapter<GroupsSettingAdapter.Vie
                         holder.owes.setText("gets back");
                         holder.owes.setTextColor(Color.parseColor("#45B39D"));
                     } else if (doubleAmount < 0) {
-                        String stringAmountFormat = String.format("%,.2f", doubleAmount*-1);
+                        String stringAmountFormat = String.format("%,.2f", doubleAmount * -1);
                         holder.amountowed.setText("RM" + stringAmountFormat);
                         holder.amountowed.setTextColor(Color.parseColor("#D81B60"));
                         holder.owes.setText("owes");
@@ -537,14 +555,15 @@ class GroupsDebtDetailsAdapter extends RecyclerView.Adapter<GroupsDebtDetailsAda
                     Object boxAmount = user.amount;
                     String stringAmount = boxAmount.toString();
                     Double doubleAmount = Double.parseDouble(stringAmount);
-                    String stringAmountFormat = String.format("%,.2f", doubleAmount);
 
                     String username = documentSnapshot.get("userName").toString();
 
                     if (doubleAmount > 0) {
+                        String stringAmountFormat = String.format("%,.2f", doubleAmount);
                         holder.balanceText.setTextColor(Color.parseColor("#45B39D"));
                         holder.balanceText.setText(username + " gets back RM" + stringAmountFormat + " in total");
                     } else if (doubleAmount < 0) {
+                        String stringAmountFormat = String.format("%,.2f", doubleAmount * -1);
                         holder.balanceText.setTextColor(Color.parseColor("#D81B60"));
                         holder.balanceText.setText(username + " owes RM" + stringAmountFormat + " in total");
                     } else {
@@ -591,93 +610,3 @@ class GroupsDebtDetailsAdapter extends RecyclerView.Adapter<GroupsDebtDetailsAda
     }
 }
 
-//class GroupsSettleUpAdapter extends RecyclerView.Adapter<GroupsSettleUpAdapter.ViewHolder> {
-//    ArrayList<GroupsAmountUserObject> items;
-//    ArrayList<UserDebtProfile> debtProfiles;
-//    FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//    public GroupsSettleUpAdapter(ArrayList<GroupsAmountUserObject> items, ArrayList<UserDebtProfile> debtProfiles) {
-//        this.items = items;
-//        this.debtProfiles = debtProfiles;
-//
-//    }
-//
-//    @NonNull
-//    @Override
-//    public GroupsSettleUpAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.groups_card_settleup, parent, false);
-//        return new ViewHolder(v);
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull GroupsSettleUpAdapter.ViewHolder holder, int position) {
-//        for (UserDebtProfile user : debtProfiles) {
-//            if (user.key.equals(items.get(position).uid)) {
-//                Log.e("mytag", "hutang :" + user.hutang);
-//                Log.e("mytag", "pinjam :" + user.pinjam);
-//
-//                for (UserStringValue detail : user.hutang) {
-//                    db.collection("contactList").document(detail.key).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                        @Override
-//                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                            if (documentSnapshot.exists()) {
-//                                String usernamebox = documentSnapshot.get("userName").toString();
-//                                holder.username.setText(usernamebox);
-//                                String useremailbox = documentSnapshot.get("userEmail").toString();
-//                                holder.useremail.setText(useremailbox);
-//                                String stringAmountFormat = String.format("%,.2f", detail.value);
-//                                holder.amount.setText(stringAmountFormat);
-//                                holder.owe.setText("You owe");
-//                                holder.amount.setTextColor(Color.parseColor("#D81B60"));
-//                                holder.owe.setTextColor(Color.parseColor("#D81B60"));
-//
-//                            }
-//
-//                        }
-//                    });
-//                }
-//                for (UserStringValue detail : user.pinjam) {
-//                    db.collection("contactList").document(detail.key).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                        @Override
-//                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                            if (documentSnapshot.exists()) {
-//                                String usernamebox = documentSnapshot.get("userName").toString();
-//                                holder.username.setText(usernamebox);
-//                                String useremailbox = documentSnapshot.get("userEmail").toString();
-//                                holder.useremail.setText(useremailbox);
-//                                String stringAmountFormat = String.format("%,.2f", detail.value);
-//                                holder.amount.setText(stringAmountFormat);
-//                                holder.owe.setText("Owes you");
-//                                holder.amount.setTextColor(Color.parseColor("#45B39D"));
-//                                holder.owe.setTextColor(Color.parseColor("#45B39D"));
-//                            }
-//
-//                        }
-//                    });
-//                }
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return items.size();
-//    }
-//
-//    class ViewHolder extends RecyclerView.ViewHolder {
-//        TextView username;
-//        TextView useremail;
-//        TextView owe;
-//        TextView amount;
-//
-//        public ViewHolder(@NonNull View itemView) {
-//            super(itemView);
-//            username = itemView.findViewById(R.id.username);
-//            useremail = itemView.findViewById(R.id.useremail);
-//            owe = itemView.findViewById(R.id.owe);
-//            amount = itemView.findViewById(R.id.amount);
-//        }
-//
-//    }
-//}
-//

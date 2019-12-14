@@ -69,30 +69,13 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/groupNameDetails"
-        android:id="@+id/linearlayout"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:text="OCTOBER 2019"
-            android:textSize="15dp" />
-
-
-    </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/expenserecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/linearlayout"
+        android:layout_below="@+id/groupNameDetails"
         android:layout_above="@id/buttonNewExpenses"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="20dp"
