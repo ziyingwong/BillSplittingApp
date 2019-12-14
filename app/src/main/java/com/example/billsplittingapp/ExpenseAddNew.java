@@ -12,7 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,7 +24,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ExpenseAddNew extends AppCompatActivity {
@@ -33,7 +37,6 @@ public class ExpenseAddNew extends AppCompatActivity {
     TextView tvGroupName;
     EditText tvBillName;
     EditText tvPrice;
-    //Map<String, Object> map;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -60,42 +63,34 @@ public class ExpenseAddNew extends AppCompatActivity {
 
                 DocumentReference doc = db.collection("Groups").document();
 
+
                 Map<String, Object> data = new HashMap<>();
+                final Map<String, Double>[] userArray = new Map[]{new HashMap<>()};
+                List array = new ArrayList();
+
+                db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            userArray[0] = (HashMap) documentSnapshot.get("user");
+                        }
+                    }
+                });
+
+                //userArray.get();
 
                 double temp = Double.parseDouble(tvPrice.getText().toString());
+
 
                 data.put("billId", doc.getId());
                 data.put("billName", tvBillName.getText().toString());
                 data.put("payer", auth.getCurrentUser().getUid());
                 data.put("price", temp);
-                //data.put("splitUser", )
+                data.put("createTime", Timestamp.now());
+                data.put("splitAmount", userArray);
 
                 db.collection("Groups").document(groupId).collection("Payment").document(doc.getId()).set(data);
 
-                /*
-                DocumentReference docRef = db.collection("Groups").document(groupId);
-                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        data.put("splitAmount", documentSnapshot.get("user"));
-                    }
-                });*/
-
-                /*
-                Query query = db.collection("Groups").whereArrayContains("userArray", auth.getCurrentUser().getUid());
-                query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (queryDocumentSnapshots.size() > 0) {
-                            for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
-                                map = (HashMap) doc.get("user");
-                                db.collection("Groups").document(groupId).collection("Payment").document(doc.getId()).set(map);
-                                map
-                            }
-                        }
-                    }
-                });*/
 
             }
         });
