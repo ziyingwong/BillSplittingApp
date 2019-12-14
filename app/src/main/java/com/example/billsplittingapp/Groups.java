@@ -64,12 +64,18 @@ public class Groups extends Fragment {
                         if (totalAmount > 0) {
                             totalAmountString.setTextColor(Color.parseColor("#45B39D"));
                             totalAmountString.setText("You are owed RM");
-                        } else {
+                            String totalAmountBox = String.format("%,.2f", totalAmount);
+                            totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
+                        } else if (totalAmount < 0){
                             totalAmountString.setTextColor(Color.parseColor("#D81B60"));
                             totalAmountString.setText("You owe RM");
+                            String totalAmountBox = String.format("%,.2f", (totalAmount*-1));
+                            totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
+                        } else {
+                            totalAmountString.setTextColor(Color.parseColor("#8E8E8E"));
+                            totalAmountString.setText("You are being settled up");
                         }
-                        String totalAmountBox = String.format("%,.2f", (totalAmount*-1));
-                        totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
+
                     }
                 }
             }

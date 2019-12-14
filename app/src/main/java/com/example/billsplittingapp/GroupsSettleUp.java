@@ -1,19 +1,28 @@
 package com.example.billsplittingapp;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,66 +64,126 @@ public class GroupsSettleUp extends AppCompatActivity {
 
     }
 
+//    public void calculateTotal() {
+//        String uid = auth.getCurrentUser().getUid();
+//        Query query = db.collection("Groups").whereArrayContains("userArray", uid);
+//        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+//                if (queryDocumentSnapshots.size() > 0) {
+//                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+//                        map = (HashMap) doc.get("user");
+//                        ArrayList<UserStringValue> positive = new ArrayList<>();
+//                        ArrayList<UserStringValue> negative = new ArrayList<>();
+//                        for (Map.Entry<String, Object> entry : map.entrySet()) {
+//                            if (Double.parseDouble(entry.getValue().toString()) > 0) {
+//                                positive.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
+//                            } else {
+//                                negative.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
+//                            }
+//                            complete.add(new UserDebtProfile(entry.getKey()));
+//                        }
+//                        int i = 0, j = 0;
+//                        while (i < positive.size()) {
+//                            if ((negative.get(j).value * -1) > positive.get(i).value) {
+//                                negative.get(j).value += positive.get(i).value;
+//                                for (UserDebtProfile usd : complete) {
+//                                    if (positive.get(i).key.equals(usd.key)) {
+//                                        usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
+//                                    } else if (negative.get(i).key.equals(usd.key)) {
+//                                        usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
+//                                    }
+//                                }
+//                                i++;
+//                            } else if ((negative.get(j).value * -1) == positive.get(i).value) {
+//                                for (UserDebtProfile usd : complete) {
+//                                    if (positive.get(i).key.equals(usd.key)) {
+//                                        usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
+//                                    } else if (negative.get(i).key.equals(usd.key)) {
+//                                        usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
+//                                    }
+//                                }
+//                                i++;
+//                                j++;
+//                            } else {
+//                                positive.get(i).value += negative.get(j).value;
+//                                for (UserDebtProfile usd : complete) {
+//                                    if (positive.get(i).key.equals(usd.key)) {
+//                                        usd.pinjam.add(new UserStringValue(negative.get(j).key, negative.get(i).value * -1));
+//                                    } else if (negative.get(i).key.equals(usd.key)) {
+//                                        usd.hutang.add(new UserStringValue(positive.get(i).key, negative.get(i).value * -1));
+//                                    }
+//                                }
+//                                j++;
+//                            }
+//                        }
+//                        addLinearCard();
+//                    }
+//                }
+//            }
+//        });
+//
+//    }
+
     public void calculateTotal() {
         String uid = auth.getCurrentUser().getUid();
-        Query query = db.collection("Groups").whereArrayContains("userArray", uid);
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+        db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (queryDocumentSnapshots.size() > 0) {
-                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
-                        map = (HashMap) doc.get("user");
-                        ArrayList<UserStringValue> positive = new ArrayList<>();
-                        ArrayList<UserStringValue> negative = new ArrayList<>();
-                        for (Map.Entry<String, Object> entry : map.entrySet()) {
-                            if (Double.parseDouble(entry.getValue().toString()) > 0) {
-                                positive.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
-                            } else {
-                                negative.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
-                            }
-                            complete.add(new UserDebtProfile(entry.getKey()));
-                        }
-                        int i = 0, j = 0;
-                        while (i < positive.size()) {
-                            if ((negative.get(j).value * -1) > positive.get(i).value) {
-                                negative.get(j).value += positive.get(i).value;
-                                for (UserDebtProfile usd : complete) {
-                                    if (positive.get(i).key.equals(usd.key)) {
-                                        usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
-                                    } else if (negative.get(i).key.equals(usd.key)) {
-                                        usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
-                                    }
-                                }
-                                i++;
-                            } else if ((negative.get(j).value * -1) == positive.get(i).value) {
-                                for (UserDebtProfile usd : complete) {
-                                    if (positive.get(i).key.equals(usd.key)) {
-                                        usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
-                                    } else if (negative.get(i).key.equals(usd.key)) {
-                                        usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
-                                    }
-                                }
-                                i++;
-                                j++;
-                            } else {
-                                positive.get(i).value += negative.get(j).value;
-                                for (UserDebtProfile usd : complete) {
-                                    if (positive.get(i).key.equals(usd.key)) {
-                                        usd.pinjam.add(new UserStringValue(negative.get(j).key, negative.get(i).value * -1));
-                                    } else if (negative.get(i).key.equals(usd.key)) {
-                                        usd.hutang.add(new UserStringValue(positive.get(i).key, negative.get(i).value * -1));
-                                    }
-                                }
-                                j++;
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                map = (HashMap) documentSnapshot.get("user");
+                ArrayList<UserStringValue> positive = new ArrayList<>();
+                ArrayList<UserStringValue> negative = new ArrayList<>();
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (Double.parseDouble(entry.getValue().toString()) > 0) {
+                        positive.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
+                    } else if(Double.parseDouble(entry.getValue().toString()) < 0) {
+                        negative.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
+                    }
+                    complete.add(new UserDebtProfile(entry.getKey()));
+                }
+                int i = 0, j = 0;
+
+                while (i < positive.size()) {
+                    Log.d("index", "" + positive.size() + " " + negative.size());
+                    if ((negative.get(j).value * -1) > positive.get(i).value) {
+                        negative.get(j).value += positive.get(i).value;
+                        for (UserDebtProfile usd : complete) {
+                            if (positive.get(i).key.equals(usd.key)) {
+                                usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
+                            } else if (negative.get(j).key.equals(usd.key)) {
+                                usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
                             }
                         }
-                        addLinearCard();
+                        i++;
+                    } else if ((negative.get(j).value * -1) == positive.get(i).value) {
+                        for (UserDebtProfile usd : complete) {
+                            if (positive.get(i).key.equals(usd.key)) {
+                                usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
+                            } else if (negative.get(j).key.equals(usd.key)) {
+                                usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
+                            }
+                        }
+                        i++;
+                        j++;
+                    } else {
+                        positive.get(i).value += negative.get(j).value;
+                        for (UserDebtProfile usd : complete) {
+                            if (positive.get(i).key.equals(usd.key)) {
+                                usd.pinjam.add(new UserStringValue(negative.get(j).key, negative.get(j).value * -1));
+                            } else if (negative.get(j).key.equals(usd.key)) {
+                                usd.hutang.add(new UserStringValue(positive.get(i).key, negative.get(j).value * -1));
+                            }
+                        }
+                        j++;
                     }
                 }
+                addLinearCard();
             }
         });
-
     }
+
 
     public void addLinearCard() {
         LinearLayout bigLinearLayout = findViewById(R.id.biglinearlayout);
@@ -122,8 +191,6 @@ public class GroupsSettleUp extends AppCompatActivity {
         LayoutInflater linf = LayoutInflater.from(GroupsSettleUp.this);
 
         bigLinearLayout.setOrientation(LinearLayout.VERTICAL);
-        ViewGroup.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
 
         for (UserDebtProfile user : complete) {
             if (user.key.equals(auth.getCurrentUser().getUid())) {
@@ -137,6 +204,7 @@ public class GroupsSettleUp extends AppCompatActivity {
                         View mView = linf.inflate(R.layout.groups_card_settleup, null);
                         TextView details = mView.findViewById(R.id.detailsSettleUp);
                         Button buttonSettle = mView.findViewById(R.id.settleupbutton);
+                        ImageButton notificationButton = mView.findViewById(R.id.notifyButton);
 
                         db.collection("contactList").document(detail.key).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
@@ -165,11 +233,19 @@ public class GroupsSettleUp extends AppCompatActivity {
                             }
                         });
 
+                        notificationButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
+
                     }
                     for (UserStringValue detail : user.pinjam) {
                         View mView = linf.inflate(R.layout.groups_card_settleup, null);
                         TextView details = mView.findViewById(R.id.detailsSettleUp);
                         Button buttonSettle = mView.findViewById(R.id.settleupbutton);
+                        ImageButton notificationButton = mView.findViewById(R.id.notifyButton);
 
                         db.collection("contactList").document(detail.key).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
@@ -197,10 +273,18 @@ public class GroupsSettleUp extends AppCompatActivity {
 
                             }
                         });
+
+                        notificationButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        });
                     }
 
                 }
             }
         }
     }
+
+
 }

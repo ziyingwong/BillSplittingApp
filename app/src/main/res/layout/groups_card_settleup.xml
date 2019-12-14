@@ -17,32 +17,32 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:orientation="horizontal"
-            android:padding="15dp">
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/detailsSettleUp"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="60dp"
                 android:text="Details Settle Up"
                 android:gravity="center_vertical"
-                android:layout_weight="3"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:id="@+id/settleupbutton"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:text="Settle Up"/>
 
             <ImageButton
                 android:id="@+id/notifyButton"
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:layout_weight="1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="#AE2B46"
                 app:srcCompat="@drawable/alert" />
 
