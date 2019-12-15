@@ -58,9 +58,11 @@ public class ExpenseAddNew extends AppCompatActivity {
         setContentView(R.layout.groups_expense);
 
 
-        Intent intent = getIntent();
-
-
+        groupId = getIntent().getStringExtra("groupId");
+        groupName = getIntent().getStringExtra("groupName");
+        splitAmount = (HashMap<String, Double>)getIntent().getSerializableExtra("splitAmount"); //GET FROM AMIRUL
+        splitUser = getIntent().getStringArrayListExtra("splitUser");
+        tvGroupName = findViewById(R.id.tvGroupName);
         billName2 = getIntent().getStringExtra("billName2");
         price = getIntent().getDoubleExtra("price",0.00);
         price2 = price.toString();
@@ -76,12 +78,6 @@ public class ExpenseAddNew extends AppCompatActivity {
         }
 
 
-
-        groupId = getIntent().getStringExtra("groupId");
-        groupName = getIntent().getStringExtra("groupName");
-        splitAmount = (HashMap<String, Double>)intent.getSerializableExtra("splitAmount"); //GET FROM AMIRUL
-        splitUser = getIntent().getStringArrayListExtra("splitUser");
-        tvGroupName = findViewById(R.id.tvGroupName);
 
 
         tvGroupName.setText(groupName);
@@ -110,7 +106,7 @@ public class ExpenseAddNew extends AppCompatActivity {
                             if (splitAmount == null) {
                                 for (int i = 0; i < user.size(); i++) {
                                    splitAmount.put(userArray.get(i), total / userArray.size());
-                                    splitUser.add(userArray.get(i));
+                                   splitUser.add(userArray.get(i));
                                 }
                             }
 
