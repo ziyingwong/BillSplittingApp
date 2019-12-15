@@ -103,7 +103,7 @@ public class ExpenseAddNew extends AppCompatActivity {
                             userArray = (ArrayList<String>) documentSnapshot.get("userArray");
 
 
-                            if (splitAmount == null) {
+                            if (splitAmount == null && splitAmount.isEmpty()) {
                                 for (int i = 0; i < user.size(); i++) {
                                    splitAmount.put(userArray.get(i), total / userArray.size());
                                    splitUser.add(userArray.get(i));
