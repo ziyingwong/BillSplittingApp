@@ -277,6 +277,7 @@ public class GroupsSettleUp extends AppCompatActivity {
                         notificationButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+
                             }
                         });
                     }

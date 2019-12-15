@@ -52,6 +52,21 @@ public class QuickSplitMain extends Fragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.add){
+            Intent intent = new Intent(getActivity(),QuickSplitCreditorAdd.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        }else if(item.getItemId()==R.id.scan){
+            Intent intent = new Intent(getActivity(),QuickSplitDebtorScanCamera.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        }
+
+        return  true;
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         adapter.startListening();
