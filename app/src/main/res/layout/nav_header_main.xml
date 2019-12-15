@@ -16,13 +16,15 @@
         android:id="@+id/nav_header_imageView"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@drawable/ic_app_icon" />
 
     <TextView
         android:id="@+id/nav_header_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:text="Split Wise"
+        android:text="Claim Your Bucks"
+        android:textStyle="bold"
+        android:textSize="20sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 </LinearLayout>
