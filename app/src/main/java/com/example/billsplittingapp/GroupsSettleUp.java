@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +28,13 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,8 +44,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GroupsSettleUp extends AppCompatActivity {
@@ -47,6 +61,9 @@ public class GroupsSettleUp extends AppCompatActivity {
     ArrayList<UserDebtProfile> complete;
     String username = "";
     String groupId;
+    String URL = "http://192.168.0.187:3030/sendEmailReminder";
+    String receiverEmail;
+    LinearLayout bigLinearLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -186,7 +203,7 @@ public class GroupsSettleUp extends AppCompatActivity {
 
 
     public void addLinearCard() {
-        LinearLayout bigLinearLayout = findViewById(R.id.biglinearlayout);
+        bigLinearLayout = findViewById(R.id.biglinearlayout);
 
         LayoutInflater linf = LayoutInflater.from(GroupsSettleUp.this);
 
@@ -236,7 +253,7 @@ public class GroupsSettleUp extends AppCompatActivity {
                         notificationButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
+                                onSendReminder(detail.key);
                             }
                         });
 
@@ -277,6 +294,8 @@ public class GroupsSettleUp extends AppCompatActivity {
                         notificationButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                onSendReminder(detail.key);
+
                             }
                         });
                     }
@@ -284,6 +303,76 @@ public class GroupsSettleUp extends AppCompatActivity {
                 }
             }
         }
+    }
+
+
+    public void onSendReminder(String payeeUID){
+        db.collection("contactList")
+                .whereEqualTo("userUID",payeeUID)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots
+                            , @Nullable FirebaseFirestoreException e) {
+                        if(e!=null){
+                            Log.e("TAG", "onEvent: Fail"+e );
+                            return;
+                        }
+                        List<RegisterUserObject> objects = snapshots.toObjects(RegisterUserObject.class);
+                        for(RegisterUserObject obj : objects){
+                            receiverEmail = obj.getUserEmail();
+                            Log.e("TAG", "onEvent: email of receiver: "+receiverEmail );
+                            StringRequest stringRequest = new StringRequest(
+                                    Request.Method.POST, URL,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try {
+
+                                                JSONArray jsonArray = new JSONArray(response);
+                                                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                                                String success = jsonObject.getString("success");
+                                                if (success.equals("1")) {
+                                                    Log.e("TAG", "onResponse: enter success 1 ");
+                                                    Toast.makeText(bigLinearLayout.getContext(),
+                                                            "A Reminder has been sent to the user's email",
+                                                            Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(bigLinearLayout.getContext(),
+                                                            "Error, Please Try Again Later",
+                                                            Toast.LENGTH_SHORT).show();
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            Toast.makeText(bigLinearLayout.getContext(),
+                                                    "Error, Please Try Again Later!",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Log.e("TAG", "onErrorResponse: "+error );
+                                        }
+                                    }) {
+                                @Override
+                                protected Map<String, String> getParams() throws AuthFailureError {
+                                    Map<String, String> params = new HashMap<>();
+                                    params.put("email", receiverEmail);
+                                    params.put("senderName",auth.getCurrentUser().getDisplayName());
+                                    return params;
+                                }
+                            };
+                            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                            requestQueue.add(stringRequest);
+                        }
+                    }
+                });
+
+
+        Log.e("TAG", "onCreate: current user name: "+auth.getCurrentUser().getDisplayName() );
+
+
     }
 
 
