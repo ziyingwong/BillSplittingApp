@@ -60,7 +60,7 @@ public class ExpenseAddNew extends AppCompatActivity {
 
         groupId = getIntent().getStringExtra("groupId");
         groupName = getIntent().getStringExtra("groupName");
-        splitAmount = (HashMap<String, Double>)getIntent().getSerializableExtra("splitAmount"); //GET FROM AMIRUL
+        splitAmount = (Map<String, Double>)getIntent().getSerializableExtra("splitAmount"); //GET FROM AMIRUL
         splitUser = getIntent().getStringArrayListExtra("splitUser");
         tvGroupName = findViewById(R.id.tvGroupName);
         billName2 = getIntent().getStringExtra("billName2");
@@ -103,9 +103,10 @@ public class ExpenseAddNew extends AppCompatActivity {
                             userArray = (ArrayList<String>) documentSnapshot.get("userArray");
 
 
-                            if (splitAmount == null && splitAmount.isEmpty()) {
-                                for (int i = 0; i < user.size(); i++) {
-                                   splitAmount.put(userArray.get(i), total / userArray.size());
+                            if (splitAmount == null) {
+                                double temp = total / userArray.size();
+                                for (int i = 0; i < userArray.size(); i++) {
+                                   splitAmount.put(userArray.get(i), temp);
                                    splitUser.add(userArray.get(i));
                                 }
                             }
