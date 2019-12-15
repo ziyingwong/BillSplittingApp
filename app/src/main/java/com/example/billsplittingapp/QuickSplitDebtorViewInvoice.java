@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,11 +73,11 @@ public class QuickSplitDebtorViewInvoice extends AppCompatActivity {
                                 Double tax = (Double) documentSnapshot.get("tax");
                                 taxTV.setText("Tax : " + tax + "%");
 
-                                QuickSplitInvoiceItem item = new QuickSplitInvoiceItem();
                                 Map<String, Long> totalPortion = (HashMap) documentSnapshot.get("totalPortion");
                                 Map<String, Number> price = (HashMap) documentSnapshot.get("items");
 
                                 for (Map.Entry<String, Long> portionForEach : totalPortion.entrySet()) {
+                                    QuickSplitInvoiceItem item = new QuickSplitInvoiceItem();
                                     long totalPortionLong = portionForEach.getValue();
                                     item.totalPortion = totalPortionLong;
                                     String name = portionForEach.getKey();
