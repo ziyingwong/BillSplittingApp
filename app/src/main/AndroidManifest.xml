@@ -68,6 +68,7 @@
         <activity android:name=".GroupsSettleUp"/>
         <activity android:name=".GroupsSettleUpPay"/>
         <activity android:name=".ExpenseAddNew"/>
+        <activity android:name=".SplitMethod_EqualValue"/>
 
 
         <meta-data
