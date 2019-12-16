@@ -70,10 +70,11 @@ public class GroupsAddNewPeopleInSetting extends AppCompatActivity {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 GroupsNewFriendCheckedArray.getInstance().tempList.clear();
-                Intent intent = new Intent(GroupsAddNewPeopleInSetting.this, GroupsDetailsSetting.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+//                Intent intent = new Intent(GroupsAddNewPeopleInSetting.this, GroupsDetailsSetting.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//                startActivity(intent);
             }
         });
 

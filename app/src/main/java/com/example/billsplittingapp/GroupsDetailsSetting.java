@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,20 +70,45 @@ public class GroupsDetailsSetting extends AppCompatActivity {
         addFriendSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GroupsNewFriendCheckedArray.getInstance().arrayList.clear();
+                db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            ArrayList<String> added = (ArrayList) documentSnapshot.get("userArray");
+                            db.collection("contactList").document(auth.getCurrentUser().getUid()).collection("friend").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    ArrayList<String> notAdded = new ArrayList<>();
+                                    for (int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++) {
+                                        if (!added.contains(queryDocumentSnapshots.getDocuments().get(i).getId())) {
+                                            notAdded.add(queryDocumentSnapshots.getDocuments().get(i).getId());
+                                        }
+                                    }
 
-                for (GroupsAmountUserObject user : arrayList) {
-                    GroupsNewUserObject olduser = new GroupsNewUserObject();
-                    olduser.friendUID = user.uid;
-                    GroupsNewFriendCheckedArray.getInstance().arrayList.add(olduser);
-
-                }
-                Intent intent = new Intent(GroupsDetailsSetting.this, GroupsAddNewPeopleInSetting.class);
-                intent.putExtra("groupId", groupId);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
+//        addFriendSetting.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                GroupsNewFriendCheckedArray.getInstance().arrayList.clear();
+//
+//                for (GroupsAmountUserObject user : arrayList) {
+//                    GroupsNewUserObject olduser = new GroupsNewUserObject();
+//                    olduser.friendUID = user.uid;
+//                    GroupsNewFriendCheckedArray.getInstance().arrayList.add(olduser);
+//
+//                }
+//                Intent intent = new Intent(GroupsDetailsSetting.this, GroupsAddNewPeopleInSetting.class);
+//                intent.putExtra("groupId", groupId);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//                startActivity(intent);
+//            }
+//        });
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         adapter = new GroupsSettingAdapter(arrayList);
@@ -122,9 +148,10 @@ public class GroupsDetailsSetting extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(GroupsDetailsSetting.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+                finish();
+//                Intent intent = new Intent(GroupsDetailsSetting.this, MainActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//                startActivity(intent);
             }
         });
 

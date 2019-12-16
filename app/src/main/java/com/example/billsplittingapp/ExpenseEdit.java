@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ public class ExpenseEdit extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
     Map<String, Double> splitAmount;
+    Map<String, Double> splitAmountFromAmirul;
+    ArrayList<String> splitUserFromAmirul;
     ArrayList<String> splitUser;
 
     @Override
@@ -55,8 +58,11 @@ public class ExpenseEdit extends AppCompatActivity {
         groupId = getIntent().getStringExtra("groupId");
         price = getIntent().getDoubleExtra("price", 0.00);
         billName = getIntent().getStringExtra("billName");
-        splitAmount = (Map<String, Double>) getIntent().getSerializableExtra("splitAmount");
-        splitUser = getIntent().getStringArrayListExtra("splitUser");
+        splitAmount = (Map<String, Double>) getIntent().getSerializableExtra("splitAmountFromGroup");
+        splitUser = getIntent().getStringArrayListExtra("splitUserFromGroup");
+
+        splitAmountFromAmirul = (Map<String, Double>) getIntent().getSerializableExtra("splitAmount"); //GET FROM AMIRUL
+        splitUserFromAmirul = getIntent().getStringArrayListExtra("splitUser");
 
         Log.e("test", "user " + splitUser.toString());
         Log.e("test", "amount " + splitAmount.toString());
@@ -124,7 +130,6 @@ public class ExpenseEdit extends AppCompatActivity {
                 } else {
                     btnSave.setClickable(false);
                     btnSplit.setClickable(false);
-                    DocumentReference doc = db.collection("Groups").document();
                     double total = Double.parseDouble(tvPrice.getText().toString());
 
                     db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -134,49 +139,51 @@ public class ExpenseEdit extends AppCompatActivity {
 
                                 Map<String, Object> data = new HashMap<>();
 
-                                Map<String, Double> user;
+                                Map<String,Object> user;
                                 ArrayList<String> userArray;
+
 
                                 user = (HashMap) documentSnapshot.get("user");
                                 userArray = (ArrayList<String>) documentSnapshot.get("userArray");
 
                                 //when splitAmount is not passed from splitting method
-                                if (splitAmount == null) {
-
-                                    splitAmount = new HashMap<>();
-                                    splitUser = new ArrayList<>();
+                                if (splitAmountFromAmirul == null) {
+                                    splitAmountFromAmirul = new HashMap<>();
+                                    splitUserFromAmirul = new ArrayList<>();
                                     double temp = total / userArray.size();
                                     for (int i = 0; i < userArray.size(); i++) {
-                                        splitAmount.put(userArray.get(i), (temp * -1));
-                                        splitUser.add(userArray.get(i));
+                                        splitAmountFromAmirul.put(userArray.get(i), temp);
+                                        splitUserFromAmirul.add(userArray.get(i));
                                     }
                                 }
 
-                                data.put("billId", doc.getId());
                                 data.put("billName", tvBillName.getText().toString());
-                                data.put("payer", auth.getCurrentUser().getUid());
+                                data.put("payer", payer);
                                 data.put("price", total);
-                                data.put("createTime", Timestamp.now());
-                                data.put("splitAmount", splitAmount);
-                                data.put("splitUser", splitUser);
+                                data.put("splitAmount", splitAmountFromAmirul);
+                                data.put("splitUser", splitUserFromAmirul);
 
-                                db.collection("Groups").document(groupId).collection("Payment").document(doc.getId()).set(data);
+                                db.collection("Groups").document(groupId).collection("Payment").document(billId).set(data, SetOptions.merge());
 
                                 // Map 1 = userArray | Map 2 = splitAmount (Added to user)
-                                for (String key : splitAmount.keySet()) {
-                                    Object objectamount = user.get(key);
-                                    Double oldValue = Double.parseDouble(objectamount.toString());
-                                    if (key.equals(auth.getCurrentUser().getUid())) {
-                                        oldValue += total;
+                                for (String key : userArray) {
+                                    if (splitAmountFromAmirul.containsKey(key)) {
+                                        user.put(key, Double.parseDouble(user.get(key).toString()) + (splitAmountFromAmirul.get(key) * -1));
                                     }
-                                    Double valueToAdd = splitAmount.get(key);
-                                    user.put(key, oldValue + valueToAdd);
+                                    if (splitAmount.containsKey(key)) {
+                                        user.put(key, Double.parseDouble(user.get(key).toString()) - (splitAmount.get(key)));
+                                    }
+                                    if (key.equals(payer)) {
+                                        user.put(key, Double.parseDouble(user.get(key).toString()) - price);
+                                        user.put(key, Double.parseDouble(user.get(key).toString()) + total);
+
+                                    }
                                 }
 
                                 db.collection("Groups").document(groupId).update("user", user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getApplicationContext(), "Added Expense", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "Updated Expense", Toast.LENGTH_SHORT).show();
                                         finish();
 
                                     }

@@ -211,8 +211,11 @@ class GroupsAddPeopleSettingAdapter extends FirestoreRecyclerAdapter<GroupsNewUs
         for (int j = 0; j < GroupsNewFriendCheckedArray.getInstance().arrayList.size(); j++) {
             if (GroupsNewFriendCheckedArray.getInstance().arrayList.get(j).friendUID.equals(groupsNewUserObject.getFriendUID())) {
                 viewHolder.checkBox.setChecked(true);
+
             }
+            Log.e("christine", GroupsNewFriendCheckedArray.getInstance().arrayList.get(j).friendUID);
         }
+
 
         viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -222,6 +225,8 @@ class GroupsAddPeopleSettingAdapter extends FirestoreRecyclerAdapter<GroupsNewUs
                 } else {
                     GroupsNewFriendCheckedArray.getInstance().deleteList.add(groupsNewUserObject);
                 }
+                Log.e("christine", GroupsNewFriendCheckedArray.getInstance().tempList.toString());
+                Log.e("christine", GroupsNewFriendCheckedArray.getInstance().deleteList.toString());
             }
         });
     }
@@ -332,10 +337,10 @@ class GroupsPaymentAdapter extends FirestoreRecyclerAdapter<GroupsPaymentObject,
                 for (String key : splitPayerObj.keySet()) {
                     splitPayer.put(key, Double.parseDouble(splitPayerObj.get(key).toString()));
                 }
-                intent.putExtra("splitAmount", (Serializable) splitPayer);
+                intent.putExtra("splitAmountFromGroup", (Serializable) splitPayer);
                 ArrayList<String> arrayList = new ArrayList<>();
                 arrayList.addAll(groupsPaymentObject.splitUser);
-                intent.putExtra("splitUser", arrayList);
+                intent.putExtra("splitUserFromGroup", arrayList);
                 v.getContext().startActivity(intent);
             }
         });

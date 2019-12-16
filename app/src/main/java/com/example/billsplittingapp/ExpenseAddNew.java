@@ -56,11 +56,12 @@ public class ExpenseAddNew extends AppCompatActivity {
         groupName = getIntent().getStringExtra("groupName");
         splitAmount = (Map<String, Double>) getIntent().getSerializableExtra("splitAmount"); //GET FROM AMIRUL
         splitUser = getIntent().getStringArrayListExtra("splitUser");
-        tvGroupName = findViewById(R.id.tvGroupName);
         billName2 = getIntent().getStringExtra("billName2");
         price = getIntent().getDoubleExtra("price", 0.00);
+
         price2 = price.toString();
-        DocumentReference doc = db.collection("Groups").document();
+        tvGroupName = findViewById(R.id.tvGroupName);
+
 
 
         tvBillName = findViewById(R.id.tvBillName);
