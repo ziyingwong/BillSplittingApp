@@ -146,7 +146,7 @@ public class ExpenseAddNew extends AppCompatActivity {
         btnSplit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ExpenseAddNew.this, SplitMethod_EqualValue.class);
+                Intent intent = new Intent(ExpenseAddNew.this, SplitMethod_Menu.class);
                 intent.putExtra("groupId", groupId);
                 intent.putExtra("groupName", groupName);
                 intent.putExtra("billName", tvBillName.getText().toString());
