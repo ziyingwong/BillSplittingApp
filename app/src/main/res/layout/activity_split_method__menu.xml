@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="119dp"
         android:gravity="center"
         android:text="Splitting Methods"
         android:textSize="36sp" />
@@ -22,7 +22,11 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginRight="16dp"
-        android:text="Equal" />
+        android:background="#009688"
+
+        android:text="Equal"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnExact"
@@ -31,7 +35,10 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginRight="16dp"
-        android:text="Exact" />
+        android:background="#009688"
+        android:text="Exact"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnPercentage"
@@ -40,7 +47,10 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginRight="16dp"
-        android:text="Percentage" />
+        android:background="#009688"
+        android:text="Percentage"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnShare"
@@ -49,5 +59,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginRight="16dp"
-        android:text="Share" />
+        android:background="#009688"
+        android:text="Share"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 </LinearLayout>
