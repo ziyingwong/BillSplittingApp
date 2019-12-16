@@ -117,9 +117,6 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectFragment).commit();
                         setTitle("Quick Split");
                         break;
-                    case R.id.navigation_notification:
-                        setTitle("Notification");
-                        break;
                     default:
                         break;
                 }

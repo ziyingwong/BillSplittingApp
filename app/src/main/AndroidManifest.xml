@@ -18,7 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ExpenseDelete"></activity>
         <activity android:name=".SplitMethod_Menu" />
 
         <service
@@ -72,6 +71,7 @@
         <activity android:name=".GroupsSettleUp" />
         <activity android:name=".GroupsSettleUpPay" />
         <activity android:name=".ExpenseAddNew" />
+        <activity android:name=".ExpenseEdit" />
         <activity android:name=".SplitMethod_EqualValue" />
         <activity android:name=".SplitMethod_ExactValue" />
         <activity android:name=".SplitMethod_Percentage" />

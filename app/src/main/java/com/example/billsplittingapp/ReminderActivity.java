@@ -1,9 +1,11 @@
 package com.example.billsplittingapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -41,13 +44,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReminderActivity extends AppCompatActivity {
-    private TextView nameTextView,statusTextView;
+    private TextView nameTextView,emailTextView;
     private String name, status, email, uid;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
-    private static String URL;
     private ProgressBar progressBar;
-    private Button reminderButton;
+    private Button deleteButton;
     private TextView completedText;
 
     @Override
@@ -55,13 +57,12 @@ public class ReminderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
         nameTextView = (TextView)findViewById(R.id.name_text);
-        statusTextView = (TextView)findViewById(R.id.status_text);
+        emailTextView = (TextView)findViewById(R.id.email_text);
         progressBar = (ProgressBar)findViewById(R.id.progress_bar);
-        reminderButton = (Button)findViewById(R.id.button_reminder);
+        deleteButton = (Button)findViewById(R.id.button_delete);
         completedText = (TextView)findViewById(R.id.completed_text);
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-        URL = "http://192.168.0.187:3030/sendEmailReminder";
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
@@ -80,100 +81,71 @@ public class ReminderActivity extends AppCompatActivity {
                 email = extras.getString("email");
                 uid = extras.getString("uid");
                 Log.e("TAG", "onCreate: email from extra"+email );
+                Log.e("TAG", "onCreate: uid from extra"+uid );
                 nameTextView.setText(name);
-                statusTextView.setText(status);
+                emailTextView.setText(email);
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog diaBox = alertDelete(uid);
+                        diaBox.show();
+                    }
+                });
             }
         }
 
     }
 
-    public void onSendReminder(View v){
-        reminderButton.setVisibility(View.GONE);
+    public void onDeleteFriend(String uid){
         progressBar.setVisibility(View.VISIBLE);
-        Log.e("TAG", "onCreate: email in reminder method"+email );
-        Log.e("TAG", "onCreate: current user name: "+auth.getCurrentUser().getDisplayName() );
-        StringRequest stringRequest = new StringRequest(
-                Request.Method.POST, URL,
-                new Response.Listener<String>() {
+        deleteButton.setVisibility(View.GONE);
+        firestore.collection("contactList")
+                .document(auth.getUid())
+                .collection("friend")
+                .document(uid)
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            JSONObject jsonObject = jsonArray.getJSONObject(0);
-                            String success = jsonObject.getString("success");
-                            if (success.equals("1")) {
-                                Toast.makeText(getApplicationContext(),
-                                        "A Reminder has been sent to the user's email",
-                                        Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
-                                completedText.setVisibility(View.VISIBLE);
-                            } else {
-                                Toast.makeText(getApplicationContext(),
-                                        "Error, Please Try Again Later",
-                                        Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
-                                reminderButton.setVisibility(View.VISIBLE);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),
-                                "Error, Please Try Again Later!",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("email", email);
-                params.put("senderName",auth.getCurrentUser().getDisplayName());
-                return params;
-            }
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        requestQueue.add(stringRequest);
-
-    }
-
-    public void onSettledUp(View v){
-        MyFriendsObject object = new MyFriendsObject(uid, name
-                ,email,
-                "Settled Up");
-        CollectionReference collectionReference =
-                firestore.collection("contactList")
-                        .document(auth.getCurrentUser().getUid())
-                        .collection("friend");
-        collectionReference
-                .whereEqualTo("friendEmail",email)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document:
-                            task.getResult()){
-                                collectionReference
-                                .document(document.getId())
-                                .set(object);
-                                statusTextView.setText("Settled Up");
-                                statusTextView.setTextColor(Color.parseColor("#607D8B"));
-                                Toast.makeText(getApplicationContext(),
-                                        "Your Bills are now Settled Up!",
-                                        Toast.LENGTH_SHORT).show();
-
-                            }
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.e("TAG", "onComplete: deleted" );
+                            progressBar.setVisibility(View.GONE);
+                            completedText.setVisibility(View.VISIBLE);
+                            deleteButton.setVisibility(View.GONE);
                         } else{
-                            Log.e("TAG", "onComplete: Failure" );
+                            progressBar.setVisibility(View.GONE);
+                            deleteButton.setVisibility(View.VISIBLE);
+                            Toast.makeText(getApplicationContext()
+                                    ,"Error, Please Try Again Later"
+                                    ,Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private AlertDialog alertDelete(String uid) {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(ReminderActivity.this)
+                //set message, title, and icon
+                .setTitle("Delete Friend?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                        onDeleteFriend(uid);
+                    }
+
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
 
     }
+
 
     @Override
     public void onBackPressed() {
