@@ -78,6 +78,7 @@ public class ReminderActivity extends AppCompatActivity {
                 email = extras.getString("email");
                 uid = extras.getString("uid");
                 Log.e("TAG", "onCreate: email from extra"+email );
+                Log.e("TAG", "onCreate: uid from extra"+uid );
                 nameTextView.setText(name);
                 emailTextView.setText(email);
                 deleteButton.setOnClickListener(new View.OnClickListener() {

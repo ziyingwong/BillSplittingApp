@@ -89,6 +89,7 @@ public class AddFriendActivity extends AppCompatActivity {
                             if(uid.equals(auth.getUid())){
                                 Toast.makeText(getApplicationContext(),"Invalid Action",Toast.LENGTH_SHORT).show();
                             } else{
+                                Toast.makeText(getApplicationContext(),"User not Found",Toast.LENGTH_SHORT).show();
                                 addFriend(uid,email,name);
                                 addFriend2(uid);
                             }
