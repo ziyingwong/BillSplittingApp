@@ -83,8 +83,6 @@ public class ExpenseAddNew extends AppCompatActivity {
                     Toast.makeText(view.getContext(), "Bill name cannot be empty", Toast.LENGTH_SHORT).show();
                 } else if (tvPrice.getText().toString().trim().isEmpty()) {
                     Toast.makeText(view.getContext(), "Amount cannot be empty", Toast.LENGTH_SHORT).show();
-                } else if (!tvPrice.getText().toString().matches(regex)) {
-                    Toast.makeText(view.getContext(), "Amount must be empty", Toast.LENGTH_SHORT).show();
                 } else {
                     btnSave.setClickable(false);
                     btnSplit.setClickable(false);
@@ -111,7 +109,7 @@ public class ExpenseAddNew extends AppCompatActivity {
                                     splitUser = new ArrayList<>();
                                     double temp = total / userArray.size();
                                     for (int i = 0; i < userArray.size(); i++) {
-                                        splitAmount.put(userArray.get(i), temp);
+                                        splitAmount.put(userArray.get(i), (temp * -1));
                                         splitUser.add(userArray.get(i));
                                     }
                                 }
@@ -134,7 +132,7 @@ public class ExpenseAddNew extends AppCompatActivity {
                                         oldValue += total;
                                     }
                                     Double valueToAdd = splitAmount.get(key);
-                                    user.put(key, oldValue - valueToAdd);
+                                    user.put(key, oldValue + valueToAdd);
                                 }
 
                                 db.collection("Groups").document(groupId).update("user", user).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -180,13 +178,12 @@ public class ExpenseAddNew extends AppCompatActivity {
 
                 if (tvPrice.getText().toString().trim().isEmpty()) {
                     Toast.makeText(view.getContext(), "Amount cannot be empty", Toast.LENGTH_SHORT).show();
-                } else if (!tvPrice.getText().toString().matches(regex)) {
-                    Toast.makeText(view.getContext(), "Amount must be empty", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(ExpenseAddNew.this, SplitMethod_Menu.class);
                     intent.putExtra("groupId", groupId);
                     intent.putExtra("groupName", groupName);
                     intent.putExtra("billName", tvBillName.getText().toString());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     intent.putExtra("total", tvPrice.getText().toString());
                     startActivity(intent);
                 }

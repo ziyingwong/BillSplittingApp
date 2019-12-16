@@ -44,11 +44,10 @@ public class GroupsDetails extends AppCompatActivity {
 
         String uid = auth.getCurrentUser().getUid();
         final TextView totalAmountString = findViewById(R.id.groupsDetails);
-
-        db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("Groups").document(groupId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Map<String,Double> map = (HashMap) documentSnapshot.get("user");
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                Map<String, Double> map = (HashMap) documentSnapshot.get("user");
                 Object objectamount = map.get(uid);
                 Double totalAmount = Double.parseDouble(objectamount.toString());
                 if (totalAmount > 0) {
@@ -56,10 +55,10 @@ public class GroupsDetails extends AppCompatActivity {
                     totalAmountString.setText("You are owed RM");
                     String totalAmountBox = String.format("%,.2f", totalAmount);
                     totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
-                } else if (totalAmount < 0){
+                } else if (totalAmount < 0) {
                     totalAmountString.setTextColor(Color.parseColor("#D81B60"));
                     totalAmountString.setText("You owe RM");
-                    String totalAmountBox = String.format("%,.2f", (totalAmount*-1));
+                    String totalAmountBox = String.format("%,.2f", (totalAmount * -1));
                     totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
                 } else {
                     totalAmountString.setTextColor(Color.parseColor("#8E8E8E"));
@@ -99,7 +98,6 @@ public class GroupsDetails extends AppCompatActivity {
                 Intent intent = new Intent(GroupsDetails.this, ExpenseAddNew.class);
                 intent.putExtra("groupId", groupId);
                 intent.putExtra("groupName", groupName);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
 
             }
@@ -199,6 +197,22 @@ public class GroupsDetails extends AppCompatActivity {
                 }
                 j++;
             }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (adapter != null) {
+            adapter.startListening();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adapter != null) {
+            adapter.stopListening();
         }
     }
 }

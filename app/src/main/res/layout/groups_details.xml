@@ -79,6 +79,7 @@
         android:layout_above="@id/buttonNewExpenses"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="20dp"
+        app:stackFromEnd="false"
         android:background="@drawable/box_background"
         android:orientation="vertical" />
 

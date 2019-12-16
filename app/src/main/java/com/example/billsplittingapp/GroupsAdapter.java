@@ -35,6 +35,7 @@ import java.security.acl.Group;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -263,10 +264,23 @@ class GroupsPaymentAdapter extends FirestoreRecyclerAdapter<GroupsPaymentObject,
             String splitAmountBox = String.format("%,.2f", groupsPaymentObject.price);
             viewHolder.amountborrowed.setText("RM" + splitAmountBox);
             if (groupsPaymentObject.payer.equals(auth.getCurrentUser().getUid().toString())) {
+                Map<String, Object> splitPayer = (HashMap) groupsPaymentObject.getSplitAmount();
+                Object splitPayerAmount = splitPayer.get(auth.getCurrentUser().getUid());
+                Double splitPayerAmountDouble = Double.parseDouble(splitPayerAmount.toString());
+                Double totalAmount = groupsPaymentObject.price;
+                Double amountPayer = totalAmount + splitPayerAmountDouble;
+                String amountPayerString = String.format("%,.2f", amountPayer);
+                viewHolder.amountborrowed.setText("RM" + amountPayerString);
                 viewHolder.lentborrow.setText("You lent");
                 viewHolder.lentborrow.setTextColor(Color.parseColor("#45B39D"));
+
                 viewHolder.amountborrowed.setTextColor(Color.parseColor("#45B39D"));
             } else {
+                Map<String, Object> splitPayer = (HashMap) groupsPaymentObject.getSplitAmount();
+                Object splitAmount = splitPayer.get(auth.getCurrentUser().getUid());
+                Double splitAmountDouble = Double.parseDouble(splitAmount.toString());
+                String splitAmountString = String.format("%,.2f", splitAmountDouble);
+                viewHolder.amountborrowed.setText("RM" + splitAmountString);
                 viewHolder.lentborrow.setText("You borrowed");
                 viewHolder.lentborrow.setTextColor(Color.parseColor("#D81B60"));
                 viewHolder.amountborrowed.setTextColor(Color.parseColor("#D81B60"));
