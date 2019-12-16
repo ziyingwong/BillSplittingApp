@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +37,8 @@ public class SplitMethod_EqualValue extends AppCompatActivity {
     String groupId;
     String groupName;
     String billName2;
+    String totaltopaywrite;
+    TextView totaltopay;
     double total;
 
 
@@ -46,10 +49,18 @@ public class SplitMethod_EqualValue extends AppCompatActivity {
         setContentView(R.layout.method_equally);
 
 
+        final Toolbar toolbar = findViewById(R.id.toolbarequal);
+        setSupportActionBar(toolbar);
+        setTitle("equal value");
+
         groupName = getIntent().getStringExtra("groupName");
         billName2 = getIntent().getStringExtra("billName");
         groupId = getIntent().getStringExtra("groupId");
         total = Double.parseDouble(getIntent().getStringExtra("total"));
+
+        totaltopay = findViewById(R.id.ettotaltopay);
+        totaltopaywrite = String.format("%.2f", total);
+        totaltopay.setText("RM" + totaltopaywrite);
 
 
 

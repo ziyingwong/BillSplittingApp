@@ -74,6 +74,7 @@
         <activity android:name=".SplitMethod_EqualValue" />
         <activity android:name=".SplitMethod_ExactValue"/>
         <activity android:name=".SplitMethod_Percentage"/>
+        <activity android:name=".SplitMethod_Share"/>
 
         <meta-data
             android:name="preloaded_fonts"
