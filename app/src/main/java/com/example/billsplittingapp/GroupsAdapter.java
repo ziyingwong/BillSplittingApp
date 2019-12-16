@@ -30,6 +30,7 @@ import com.google.firebase.firestore.Query;
 
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.security.acl.Group;
 import java.text.SimpleDateFormat;
@@ -70,7 +71,6 @@ public class GroupsAdapter extends FirestoreRecyclerAdapter<GroupsObject, Groups
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), GroupsDetails.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 intent.putExtra("groupId", groupsObjects.groupId);
                 intent.putExtra("groupName", groupsObjects.groupName);
                 v.getContext().startActivity(intent);
@@ -250,9 +250,11 @@ class GroupsAddPeopleSettingAdapter extends FirestoreRecyclerAdapter<GroupsNewUs
 class GroupsPaymentAdapter extends FirestoreRecyclerAdapter<GroupsPaymentObject, GroupsPaymentAdapter.ViewHolder> {
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String groupId;
 
-    public GroupsPaymentAdapter(FirestoreRecyclerOptions<GroupsPaymentObject> options) {
+    public GroupsPaymentAdapter(FirestoreRecyclerOptions<GroupsPaymentObject> options, String groupId) {
         super(options);
+        this.groupId = groupId;
     }
 
     @Override
@@ -313,6 +315,28 @@ class GroupsPaymentAdapter extends FirestoreRecyclerAdapter<GroupsPaymentObject,
                 } else {
                     viewHolder.expenseactivity.setText("You are not involved");
                 }
+            }
+        });
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), ExpenseEdit.class);
+                intent.putExtra("billId", groupsPaymentObject.billId);
+                intent.putExtra("payer", groupsPaymentObject.payer);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra("price", groupsPaymentObject.price);
+                intent.putExtra("billName", groupsPaymentObject.billName);
+                Map<String, Object> splitPayerObj = (HashMap) groupsPaymentObject.getSplitAmount();
+                Map<String, Double> splitPayer = new HashMap<>();
+                for (String key : splitPayerObj.keySet()) {
+                    splitPayer.put(key, Double.parseDouble(splitPayerObj.get(key).toString()));
+                }
+                intent.putExtra("splitAmount", (Serializable) splitPayer);
+                ArrayList<String> arrayList = new ArrayList<>();
+                arrayList.addAll(groupsPaymentObject.splitUser);
+                intent.putExtra("splitUser", arrayList);
+                v.getContext().startActivity(intent);
             }
         });
 

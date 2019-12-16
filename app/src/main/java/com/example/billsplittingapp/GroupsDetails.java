@@ -115,7 +115,7 @@ public class GroupsDetails extends AppCompatActivity {
                 .setQuery(query, GroupsPaymentObject.class)
                 .build();
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new GroupsPaymentAdapter(options);
+        adapter = new GroupsPaymentAdapter(options,groupId);
         adapter.startListening();
         recycler.setAdapter(adapter);
 

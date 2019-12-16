@@ -1,5 +1,7 @@
 package com.example.billsplittingapp;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,8 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,20 +22,18 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.firebase.firestore.remote.WatchChange.WatchTargetChangeType.Added;
-
-public class ExpenseAddNew extends AppCompatActivity {
+public class ExpenseEdit extends AppCompatActivity {
 
     String groupId;
-    String groupName;
-    String billName2;
+    String billName;
+    String billId;
     Double price;
-    String price2;
+    String payer;
     Button btnSave;
     Button btnSplit;
     Button btnDelete;
@@ -44,40 +44,78 @@ public class ExpenseAddNew extends AppCompatActivity {
     FirebaseAuth auth = FirebaseAuth.getInstance();
     Map<String, Double> splitAmount;
     ArrayList<String> splitUser;
-    private Double total;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_expense);
 
-
+        billId = getIntent().getStringExtra("billId");
+        payer = getIntent().getStringExtra("payer");
         groupId = getIntent().getStringExtra("groupId");
-        groupName = getIntent().getStringExtra("groupName");
-        splitAmount = (Map<String, Double>) getIntent().getSerializableExtra("splitAmount"); //GET FROM AMIRUL
-        splitUser = getIntent().getStringArrayListExtra("splitUser");
-        tvGroupName = findViewById(R.id.tvGroupName);
-        billName2 = getIntent().getStringExtra("billName2");
         price = getIntent().getDoubleExtra("price", 0.00);
-        price2 = price.toString();
-        DocumentReference doc = db.collection("Groups").document();
+        billName = getIntent().getStringExtra("billName");
+        splitAmount = (Map<String, Double>) getIntent().getSerializableExtra("splitAmount");
+        splitUser = getIntent().getStringArrayListExtra("splitUser");
 
-
+        Log.e("test", "user " + splitUser.toString());
+        Log.e("test", "amount " + splitAmount.toString());
         tvBillName = findViewById(R.id.tvBillName);
         tvPrice = findViewById(R.id.tvPrice);
+        tvGroupName = findViewById(R.id.tvGroupName);
+        btnDelete = findViewById(R.id.btnDelete);
 
-        if (billName2 != null && !billName2.isEmpty()) {
-            tvBillName.setText(billName2, TextView.BufferType.EDITABLE);
-            tvPrice.setText(price2, TextView.BufferType.EDITABLE);
-        }
+        tvGroupName.setText(billName);
+        tvBillName.setText(billName);
+        tvPrice.setText(price.toString());
 
 
-        tvGroupName.setText(groupName);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog dialog = new AlertDialog.Builder(view.getContext()).setTitle("Delete Expense").setMessage("Are you sure you want to delete this expense").setPositiveButton("Yes", null).setNegativeButton("No", null).show();
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    Map<String, Object> user = (HashMap) documentSnapshot.get("user");
+                                    for (String key : splitAmount.keySet()) {
+
+
+                                        user.put(key, Double.parseDouble(user.get(key).toString()) - splitAmount.get(key));
+                                        Log.e("test", key);
+                                        Log.e("test", user.get(key).toString());
+                                        if (key.equals(payer)) {
+                                            Log.e("test", "equal");
+                                            user.put(key, Double.parseDouble(user.get(key).toString()) - price);
+                                        }
+//
+
+                                    }
+                                    db.collection("Groups").document(groupId).update("user", user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            db.collection("Groups").document(groupId).collection("Payment").document(billId).delete();
+                                            finish();
+                                        }
+                                    });
+
+                                }
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
+
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String regex = "[0-9]+";
 
                 if (tvBillName.getText().toString().trim().isEmpty()) {
                     Toast.makeText(view.getContext(), "Bill name cannot be empty", Toast.LENGTH_SHORT).show();
@@ -87,7 +125,7 @@ public class ExpenseAddNew extends AppCompatActivity {
                     btnSave.setClickable(false);
                     btnSplit.setClickable(false);
                     DocumentReference doc = db.collection("Groups").document();
-                    total = Double.parseDouble(tvPrice.getText().toString());
+                    double total = Double.parseDouble(tvPrice.getText().toString());
 
                     db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
@@ -152,23 +190,16 @@ public class ExpenseAddNew extends AppCompatActivity {
             }
 
         });
-        btnDelete = findViewById(R.id.btnDelete);
-        btnDelete.setVisibility(View.INVISIBLE);
-
 
         btnSplit = findViewById(R.id.btnSplit);
-
         btnSplit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String regex = "[0-9]+";
-
                 if (tvPrice.getText().toString().trim().isEmpty() || Double.parseDouble(tvPrice.getText().toString()) == 0) {
                     Toast.makeText(view.getContext(), "Amount cannot be empty or 0", Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(ExpenseAddNew.this, SplitMethod_Menu.class);
+                    Intent intent = new Intent(ExpenseEdit.this, SplitMethod_Menu.class);
                     intent.putExtra("groupId", groupId);
-                    intent.putExtra("groupName", groupName);
                     intent.putExtra("billName", tvBillName.getText().toString());
                     intent.putExtra("total", tvPrice.getText().toString());
                     startActivity(intent);
