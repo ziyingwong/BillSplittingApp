@@ -36,6 +36,7 @@ public class ExpenseAddNew extends AppCompatActivity {
     String price2;
     Button btnSave;
     Button btnSplit;
+    Button btnDelete;
     TextView tvGroupName;
     EditText tvBillName;
     EditText tvPrice;
@@ -70,16 +71,15 @@ public class ExpenseAddNew extends AppCompatActivity {
             tvPrice.setText(price2, TextView.BufferType.EDITABLE);
         }
 
-
-
-
         tvGroupName.setText(groupName);
+
+        DocumentReference doc = db.collection("Groups").document();
 
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DocumentReference doc = db.collection("Groups").document();
+
                 total = Double.parseDouble(tvPrice.getText().toString());
 
                 db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -118,28 +118,46 @@ public class ExpenseAddNew extends AppCompatActivity {
                             db.collection("Groups").document(groupId).collection("Payment").document(doc.getId()).set(data);
 
                            // Map 1 = userArray | Map 2 = splitAmount (Added to user)
-                                for (String key : splitAmount.keySet()) {
-                                    Object objectamount = user.get(key);
-                                    Double oldValue = Double.parseDouble(objectamount.toString());
-                                    Double valueToAdd = splitAmount.get(key);
-                                    user.put(key, oldValue + valueToAdd);
-                                }
+                            for (String key : splitAmount.keySet()) {
+                                Object objectamount = user.get(key);
+                                Double oldValue = Double.parseDouble(objectamount.toString());
+                                Double valueToAdd = splitAmount.get(key);
+                                user.put(key, oldValue + valueToAdd);
+                            }
+
 
                             db.collection("Groups").document(groupId).update("user", user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Toast.makeText(getApplicationContext(), "Added Expense", Toast.LENGTH_SHORT).show();
+
                                 }
                             });
 
-
-
+                            Toast.makeText(getApplicationContext(), "Added Expense", Toast.LENGTH_SHORT).show();
 
                         }
                     }
                 });
+
             }
 
+        });
+
+        btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(ExpenseAddNew.this, ExpenseDelete.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra("groupName", groupName);
+                intent.putExtra("createTime", Timestamp.now());
+                intent.putExtra("total", tvPrice.getText().toString());
+                intent.putExtra("billId", doc.getId());
+                intent.putExtra("billName", tvBillName.getText().toString());
+                startActivity(intent);
+
+            }
         });
 
         btnSplit = findViewById(R.id.btnSplit);

@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SplitMethod_Menu"></activity>
+        <activity android:name=".ExpenseDelete"></activity>
+        <activity android:name=".SplitMethod_Menu" />
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -72,8 +73,8 @@
         <activity android:name=".GroupsSettleUpPay" />
         <activity android:name=".ExpenseAddNew" />
         <activity android:name=".SplitMethod_EqualValue" />
-        <activity android:name=".SplitMethod_ExactValue"/>
-        <activity android:name=".SplitMethod_Percentage"/>
+        <activity android:name=".SplitMethod_ExactValue" />
+        <activity android:name=".SplitMethod_Percentage" />
 
         <meta-data
             android:name="preloaded_fonts"

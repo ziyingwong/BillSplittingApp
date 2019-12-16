@@ -20,9 +20,6 @@ public class MethodSplitAdapterEqually extends RecyclerView.Adapter<MethodSplitA
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     Double total;
 
-
-
-
     public MethodSplitAdapterEqually(ArrayList<MethodSplitObject> items, Double total) {
         this.items = items;
         this.total = total;

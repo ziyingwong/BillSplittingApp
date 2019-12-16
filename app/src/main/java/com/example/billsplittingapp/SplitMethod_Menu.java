@@ -17,7 +17,6 @@ public class SplitMethod_Menu extends AppCompatActivity {
     String groupId;
     String groupName;
     String billName;
-    double total;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
