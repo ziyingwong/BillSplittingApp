@@ -1,9 +1,11 @@
 package com.example.billsplittingapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -84,7 +87,8 @@ public class ReminderActivity extends AppCompatActivity {
                 deleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onDeleteFriend(uid);
+                        AlertDialog diaBox = alertDelete(uid);
+                        diaBox.show();
                     }
                 });
             }
@@ -93,7 +97,8 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     public void onDeleteFriend(String uid){
-
+        progressBar.setVisibility(View.VISIBLE);
+        deleteButton.setVisibility(View.GONE);
         firestore.collection("contactList")
                 .document(auth.getUid())
                 .collection("friend")
@@ -104,15 +109,41 @@ public class ReminderActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
                             Log.e("TAG", "onComplete: deleted" );
+                            progressBar.setVisibility(View.GONE);
                             completedText.setVisibility(View.VISIBLE);
                             deleteButton.setVisibility(View.GONE);
                         } else{
+                            progressBar.setVisibility(View.GONE);
+                            deleteButton.setVisibility(View.VISIBLE);
                             Toast.makeText(getApplicationContext()
                                     ,"Error, Please Try Again Later"
                                     ,Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private AlertDialog alertDelete(String uid) {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(ReminderActivity.this)
+                //set message, title, and icon
+                .setTitle("Delete Friend?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                        onDeleteFriend(uid);
+                    }
+
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
     }
 
 

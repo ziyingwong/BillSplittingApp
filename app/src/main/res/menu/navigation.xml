@@ -20,11 +20,6 @@
         app:showAsAction="always"
         android:title="Quick Split"/>
 
-    <item
-        android:id="@+id/navigation_notification"
-        android:icon="@drawable/bottom_navigation_notification"
-        app:showAsAction="always"
-        android:title="Notification"/>
 
 
 </menu>

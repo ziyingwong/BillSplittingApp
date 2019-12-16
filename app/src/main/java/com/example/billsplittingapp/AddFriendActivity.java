@@ -60,10 +60,14 @@ public class AddFriendActivity extends AppCompatActivity {
             public void onEvent(@Nullable QuerySnapshot snapshots
                     , @Nullable FirebaseFirestoreException e) {
                 if(e!=null){
-                    Log.e("TAG", "onEvent: Fail"+e );
+                    Log.e("TAG", "onEvent: user not found Fail"+e );
+                    Toast.makeText(AddFriendActivity.this,"User not Found",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 List<RegisterUserObject> objects = snapshots.toObjects(RegisterUserObject.class);
+                if(objects.isEmpty()){
+                    Toast.makeText(AddFriendActivity.this,"User not Found",Toast.LENGTH_SHORT).show();
+                }
                 for(RegisterUserObject obj : objects){
                     final String name = obj.getUserName();
                     final String email = obj.getUserEmail();
@@ -89,7 +93,6 @@ public class AddFriendActivity extends AppCompatActivity {
                             if(uid.equals(auth.getUid())){
                                 Toast.makeText(getApplicationContext(),"Invalid Action",Toast.LENGTH_SHORT).show();
                             } else{
-                                Toast.makeText(getApplicationContext(),"User not Found",Toast.LENGTH_SHORT).show();
                                 addFriend(uid,email,name);
                                 addFriend2(uid);
                             }
