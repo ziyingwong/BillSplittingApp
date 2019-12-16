@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,8 +38,6 @@ public class SplitMethod_Percentage extends AppCompatActivity {
     String groupId;
     String groupName;
     String billName2;
-    String totaltopaywrite;
-    TextView totaltopay;
     double total;
 
 
@@ -49,19 +46,12 @@ public class SplitMethod_Percentage extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.method_percentage);
-        final Toolbar toolbar = findViewById(R.id.toolbarpercentage);
-        setSupportActionBar(toolbar);
-        setTitle("percentage");
 
 
         groupName = getIntent().getStringExtra("groupName");
         billName2 = getIntent().getStringExtra("billName");
         groupId = getIntent().getStringExtra("groupId");
         total = Double.parseDouble(getIntent().getStringExtra("total"));
-
-        totaltopay = findViewById(R.id.ettotaltopay);
-        totaltopaywrite = String.format("%.2f", total);
-        totaltopay.setText("RM" + totaltopaywrite);
 
 
 
@@ -94,51 +84,31 @@ public class SplitMethod_Percentage extends AppCompatActivity {
             public void onClick(View v) {
                 HashMap<String, Double> newAmount = new HashMap<>();
 
-                Double counttotal = 0.0;
-                boolean emptycheck = true;
+                int counttotal = 0;
 
                 for (int i = 0; i < userArray.size(); i++) {
                     View view = recyclerView2.getChildAt(i);
                     EditText amount = view.findViewById(R.id.etpercentage);
-
-                    if(amount.getText().toString().isEmpty()){
-                        emptycheck = false;
-                        break;
-                    }
-
-                    counttotal += Double.parseDouble(amount.getText().toString());
+                    counttotal += Integer.parseInt(amount.getText().toString());
                 }
 
-
-                if(emptycheck == false){
-                    Toast. makeText(getApplicationContext(),"Don't leave empty", Toast. LENGTH_LONG).show();
-
-                }
-
-                else if(counttotal != 100.00 && emptycheck == true){
+                if(counttotal != 100){
                     Toast. makeText(getApplicationContext(),"Sum of percentages must be 100%", Toast. LENGTH_LONG).show();
-                }
-
-                else{
+                }else{
                     for (int i = 0; i < userArray.size(); i++) {
                         View view = recyclerView2.getChildAt(i);
                         EditText amount = view.findViewById(R.id.etpercentage);
                         Double portion = Double.parseDouble(amount.getText().toString());
-                        Double newportion = (portion/100.00)*total;
-                        String str = String.format("%1.2f", newportion);
-                        Double str2 = Double.parseDouble(str);
-                        newAmount.put(userArray.get(i), str2);
+                        newAmount.put(userArray.get(i), portion);
+                        Intent intent = new Intent(SplitMethod_Percentage.this, ExpenseAddNew.class);
+                        intent.putExtra("groupId", groupId);
+                        intent.putExtra("groupName", groupName);
+                        intent.putExtra("splitAmount", newAmount);
+                        intent.putExtra("splitUser", userArray);
+                        intent.putExtra("price", total);
+                        intent.putExtra("billName2", billName2);
+                        startActivity(intent);
                     }
-
-
-                    Intent intent = new Intent(SplitMethod_Percentage.this, ExpenseAddNew.class);
-                    intent.putExtra("groupId", groupId);
-                    intent.putExtra("groupName", groupName);
-                    intent.putExtra("splitAmount", newAmount);
-                    intent.putExtra("splitUser", userArray);
-                    intent.putExtra("price", total);
-                    intent.putExtra("billName2", billName2);
-                    startActivity(intent);
                 }
             }
         });

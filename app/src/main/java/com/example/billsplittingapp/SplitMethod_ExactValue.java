@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,8 +38,6 @@ public class SplitMethod_ExactValue extends AppCompatActivity {
     String groupId;
     String groupName;
     String billName2;
-    String totaltopaywrite;
-    TextView totaltopay;
     double total;
 
 
@@ -49,9 +46,6 @@ public class SplitMethod_ExactValue extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.method_exactvalue);
-        final Toolbar toolbar = findViewById(R.id.toolbarexact);
-        setSupportActionBar(toolbar);
-        setTitle("exact value");
 
 
         groupName = getIntent().getStringExtra("groupName");
@@ -59,10 +53,6 @@ public class SplitMethod_ExactValue extends AppCompatActivity {
         groupId = getIntent().getStringExtra("groupId");
         total = Double.parseDouble(getIntent().getStringExtra("total"));
 
-
-        totaltopay = findViewById(R.id.ettotaltopay);
-        totaltopaywrite = String.format("%.2f", total);
-        totaltopay.setText("RM" + totaltopaywrite);
 
 
         db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -95,60 +85,32 @@ public class SplitMethod_ExactValue extends AppCompatActivity {
                 HashMap<String, Double> newAmount = new HashMap<>();
 
                 Double counttotal = 0.00;
-                boolean emptycheck = true;
 
                 for (int i = 0; i < userArray.size(); i++) {
                     View view = recyclerView2.getChildAt(i);
                     EditText amount = view.findViewById(R.id.etexactvalue);
-
-                    if(amount.getText().toString().isEmpty()){
-                        emptycheck = false;
-                        break;
-                    }
-
                     counttotal += Double.parseDouble(amount.getText().toString());
                 }
 
-                if(emptycheck == false){
-                    Toast. makeText(getApplicationContext(),"Don't leave empty", Toast. LENGTH_LONG).show();
-
-                }
-
-                else if(counttotal != total && emptycheck == true){
-
-                    if(counttotal<total){
-                        Double balance = total - counttotal;
-                        String s = String.format("%.2f", balance);
-                        Toast. makeText(getApplicationContext(),"Not enough RM" + s, Toast. LENGTH_LONG).show();
-                    }
-
-                    else{
-                        Double balance = counttotal - total;
-                        String s = String.format("%.2f", balance);
-                        Toast. makeText(getApplicationContext(),"Exceed RM" + s, Toast. LENGTH_LONG).show();
-                    }
-
-                }
-
-                else{
+                if(counttotal != total){
+                    Double balance = total - counttotal;
+                    String s = String.format("%.2f", balance);
+                    Toast. makeText(getApplicationContext(),"Not enough " + s, Toast. LENGTH_LONG).show();
+                }else{
                     for (int i = 0; i < userArray.size(); i++) {
                         View view = recyclerView2.getChildAt(i);
                         EditText amount = view.findViewById(R.id.etexactvalue);
-
-
-
                         Double portion = Double.parseDouble(amount.getText().toString());
                         newAmount.put(userArray.get(i), portion);
-
+                        Intent intent = new Intent(SplitMethod_ExactValue.this, ExpenseAddNew.class);
+                        intent.putExtra("groupId", groupId);
+                        intent.putExtra("groupName", groupName);
+                        intent.putExtra("splitAmount", newAmount);
+                        intent.putExtra("splitUser", userArray);
+                        intent.putExtra("price", total);
+                        intent.putExtra("billName2", billName2);
+                        startActivity(intent);
                     }
-                    Intent intent = new Intent(SplitMethod_ExactValue.this, ExpenseAddNew.class);
-                    intent.putExtra("groupId", groupId);
-                    intent.putExtra("groupName", groupName);
-                    intent.putExtra("splitAmount", newAmount);
-                    intent.putExtra("splitUser", userArray);
-                    intent.putExtra("price", total);
-                    intent.putExtra("billName2", billName2);
-                    startActivity(intent);
                 }
             }
         });

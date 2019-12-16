@@ -1,7 +1,6 @@
 package com.example.billsplittingapp;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +28,6 @@ public class GroupDebtDetailsList extends AppCompatActivity {
     ArrayList<UserDebtProfile> complete;
     Map<String, Object> map;
     RecyclerView recyclerView;
-    String groupId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +39,7 @@ public class GroupDebtDetailsList extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("Balances");
         final String groupName = getIntent().getStringExtra("groupName");
-        groupId = getIntent().getStringExtra("groupId");
+        final String groupId = getIntent().getStringExtra("groupId");
         ArrayList<GroupsAmountUserObject> arrayList = new ArrayList<>();
         db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -69,62 +67,65 @@ public class GroupDebtDetailsList extends AppCompatActivity {
     }
 
     public void calculateTotal() {
+
         String uid = auth.getCurrentUser().getUid();
-
-        db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-
+        Query query = db.collection("Groups").whereArrayContains("userArray", uid);
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                map = (HashMap) documentSnapshot.get("user");
-                ArrayList<UserStringValue> positive = new ArrayList<>();
-                ArrayList<UserStringValue> negative = new ArrayList<>();
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    if (Double.parseDouble(entry.getValue().toString()) > 0) {
-                        positive.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
-                    } else if (Double.parseDouble(entry.getValue().toString()) < 0) {
-                        negative.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots.size() > 0) {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        map = (HashMap) doc.get("user");
+                        ArrayList<UserStringValue> positive = new ArrayList<>();
+                        ArrayList<UserStringValue> negative = new ArrayList<>();
+                        for (Map.Entry<String, Object> entry : map.entrySet()) {
+                            if (Double.parseDouble(entry.getValue().toString()) > 0) {
+                                positive.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
+                            } else {
+                                negative.add(new UserStringValue(entry.getKey(), Double.parseDouble(entry.getValue().toString())));
+                            }
+                            complete.add(new UserDebtProfile(entry.getKey()));
+                        }
+                        int i = 0, j = 0;
+                        while (i < positive.size()) {
+                            if ((negative.get(j).value * -1) > positive.get(i).value) {
+                                negative.get(j).value += positive.get(i).value;
+                                for (UserDebtProfile usd : complete) {
+                                    if (positive.get(i).key.equals(usd.key)) {
+                                        usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
+                                    } else if (negative.get(i).key.equals(usd.key)) {
+                                        usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
+                                    }
+                                }
+                                i++;
+                            } else if ((negative.get(j).value * -1) == positive.get(i).value) {
+                                for (UserDebtProfile usd : complete) {
+                                    if (positive.get(i).key.equals(usd.key)) {
+                                        usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
+                                    } else if (negative.get(i).key.equals(usd.key)) {
+                                        usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
+                                    }
+                                }
+                                i++;
+                                j++;
+                            } else {
+                                positive.get(i).value += negative.get(j).value;
+                                for (UserDebtProfile usd : complete) {
+                                    if (positive.get(i).key.equals(usd.key)) {
+                                        usd.pinjam.add(new UserStringValue(negative.get(j).key, negative.get(i).value * -1));
+                                    } else if (negative.get(i).key.equals(usd.key)) {
+                                        usd.hutang.add(new UserStringValue(positive.get(i).key, negative.get(i).value * -1));
+                                    }
+                                }
+                                j++;
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
                     }
-                    complete.add(new UserDebtProfile(entry.getKey()));
                 }
-                int i = 0, j = 0;
-
-                while (i < positive.size()) {
-                    Log.d("index", "" + positive.size() + " " + negative.size());
-                    if ((negative.get(j).value * -1) > positive.get(i).value) {
-                        negative.get(j).value += positive.get(i).value;
-                        for (UserDebtProfile usd : complete) {
-                            if (positive.get(i).key.equals(usd.key)) {
-                                usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
-                            } else if (negative.get(j).key.equals(usd.key)) {
-                                usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
-                            }
-                        }
-                        i++;
-                    } else if ((negative.get(j).value * -1) == positive.get(i).value) {
-                        for (UserDebtProfile usd : complete) {
-                            if (positive.get(i).key.equals(usd.key)) {
-                                usd.pinjam.add(new UserStringValue(negative.get(j).key, positive.get(i).value));
-                            } else if (negative.get(j).key.equals(usd.key)) {
-                                usd.hutang.add(new UserStringValue(positive.get(i).key, positive.get(i).value));
-                            }
-                        }
-                        i++;
-                        j++;
-                    } else {
-                        positive.get(i).value += negative.get(j).value;
-                        for (UserDebtProfile usd : complete) {
-                            if (positive.get(i).key.equals(usd.key)) {
-                                usd.pinjam.add(new UserStringValue(negative.get(j).key, negative.get(j).value * -1));
-                            } else if (negative.get(j).key.equals(usd.key)) {
-                                usd.hutang.add(new UserStringValue(positive.get(i).key, negative.get(j).value * -1));
-                            }
-                        }
-                        j++;
-                    }
-                }
-                adapter.notifyDataSetChanged();
             }
         });
+
     }
 }
 

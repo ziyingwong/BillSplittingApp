@@ -313,26 +313,6 @@ class QuickSplitPaidStatusListAdapter extends RecyclerView.Adapter<QuickSplitPai
         final QuickSplitDebtor debtor = arrayList.get(position);
         holder.debtorName.setText(debtor.displayName);
         holder.debtorAmount.setText(debtor.amount.toString());
-
-        if (debtor.displayName.equals("Me")) {
-            Map status = new HashMap();
-            status.put("status", QuickSplitMemberStatus.PAID);
-            db.collection("QuickSplit").document(billId)
-                    .collection("splitWith").document(debtor.uid)
-                    .set(status, SetOptions.merge())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(context, "Updated", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "Fail to update", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
         if (debtor.status != QuickSplitMemberStatus.PAID) {
             holder.debtorStatus.setText("Unpaid");
         } else {
@@ -342,42 +322,38 @@ class QuickSplitPaidStatusListAdapter extends RecyclerView.Adapter<QuickSplitPai
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (debtor.status != QuickSplitMemberStatus.PAID) {
-
-                    final androidx.appcompat.app.AlertDialog dialog = new AlertDialog.Builder(context)
-                            .setMessage(debtor.displayName + " paid you RM" + debtor.amount + " ?")
-                            .setPositiveButton("Yes", null)
-                            .setNegativeButton("Cancel", null)
-                            .setTitle("Add item")
-                            .setCancelable(false)
-                            .create();
-                    dialog.show();
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Map status = new HashMap();
-                            status.put("status", QuickSplitMemberStatus.PAID);
-                            db.collection("QuickSplit").document(billId)
-                                    .collection("splitWith").document(debtor.uid)
-                                    .set(status, SetOptions.merge())
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(context, "Updated", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(context, "Fail to update", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
-                                        }
-                                    });
-                        }
-
-                    });
-                }
+                final androidx.appcompat.app.AlertDialog dialog = new AlertDialog.Builder(context)
+                        .setMessage(debtor.displayName + " paid you RM" + debtor.amount + " ?")
+                        .setPositiveButton("Yes", null)
+                        .setNegativeButton("Cancel", null)
+                        .setTitle("Add item")
+                        .setCancelable(false)
+                        .create();
+                dialog.show();
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Map status = new HashMap();
+                        status.put("status", QuickSplitMemberStatus.PAID);
+                        db.collection("QuickSplit").document(billId)
+                                .collection("splitWith").document(debtor.uid)
+                                .set(status, SetOptions.merge())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(context, "Updated", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(context, "Fail to update", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                    }
+                                });
+                    }
+                });
             }
         });
     }

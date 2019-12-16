@@ -69,6 +69,7 @@ public class GroupsAdapter extends FirestoreRecyclerAdapter<GroupsObject, Groups
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), GroupsDetails.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 intent.putExtra("groupId", groupsObjects.groupId);
                 intent.putExtra("groupName", groupsObjects.groupName);
                 v.getContext().startActivity(intent);

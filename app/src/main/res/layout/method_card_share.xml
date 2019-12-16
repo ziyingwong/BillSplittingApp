@@ -51,13 +51,13 @@
 
 
                 <EditText
-                    android:id="@+id/etshare"
+                    android:id="@+id/editText"
                     android:layout_width="62dp"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:gravity="center"
                     android:hint="0"
-                    android:inputType="numberDecimal"
+                    android:inputType="textPersonName"
                     android:textSize="14sp" />
 
                 <TextView

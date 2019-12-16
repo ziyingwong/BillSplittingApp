@@ -36,6 +36,7 @@ public class ExpenseAddNew extends AppCompatActivity {
     String price2;
     Button btnSave;
     Button btnSplit;
+    Button btnDelete;
     TextView tvGroupName;
     EditText tvBillName;
     EditText tvPrice;
@@ -59,6 +60,7 @@ public class ExpenseAddNew extends AppCompatActivity {
         billName2 = getIntent().getStringExtra("billName2");
         price = getIntent().getDoubleExtra("price", 0.00);
         price2 = price.toString();
+        DocumentReference doc = db.collection("Groups").document();
 
 
         tvBillName = findViewById(R.id.tvBillName);
@@ -151,6 +153,22 @@ public class ExpenseAddNew extends AppCompatActivity {
                 }
             }
 
+        });
+        btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(ExpenseAddNew.this, ExpenseDelete.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra("groupName", groupName);
+                intent.putExtra("createTime", Timestamp.now());
+                intent.putExtra("total", tvPrice.getText().toString());
+                intent.putExtra("billId", doc.getId());
+                intent.putExtra("billName", tvBillName.getText().toString());
+                startActivity(intent);
+
+            }
         });
 
         btnSplit = findViewById(R.id.btnSplit);

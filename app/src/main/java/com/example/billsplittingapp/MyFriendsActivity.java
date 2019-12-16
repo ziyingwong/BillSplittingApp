@@ -91,7 +91,6 @@ public class MyFriendsActivity extends Fragment {
                                     i.putExtra("email", email);
                                     i.putExtra("uid", uid);
                                     Log.e("TAG", "MyFriendsActivityClass: email is: " + email);
-                                    Log.e("TAG", "MyFriendsActivityClass: uid is: " + uid);
                                     startActivity(i);
                                 }
                             });
