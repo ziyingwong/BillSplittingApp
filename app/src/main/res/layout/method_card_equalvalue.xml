@@ -49,9 +49,15 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="11dp"
                 android:layout_marginEnd="4dp"
-                android:orientation="vertical"
                 android:padding="15dp">
 
+
+                <TextView
+                    android:id="@+id/rm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="RM" />
 
                 <TextView
                     android:id="@+id/tvtopay"
@@ -59,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:text="You pay" />
+
             </LinearLayout>
 
 

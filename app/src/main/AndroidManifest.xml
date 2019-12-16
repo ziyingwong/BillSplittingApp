@@ -72,6 +72,8 @@
         <activity android:name=".GroupsSettleUpPay" />
         <activity android:name=".ExpenseAddNew" />
         <activity android:name=".SplitMethod_EqualValue" />
+        <activity android:name=".SplitMethod_ExactValue"/>
+        <activity android:name=".SplitMethod_Percentage"/>
 
         <meta-data
             android:name="preloaded_fonts"

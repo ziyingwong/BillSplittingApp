@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import androidx.annotation.Nullable;
@@ -19,7 +17,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,8 +26,11 @@ public class SplitMethod_EqualValue extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    MethodSplitAdapter adapter;
+    MethodSplitAdapterEqually adapter;
     RecyclerView recyclerView2;
+    ArrayList<MethodSplitObject> arrayList = new ArrayList<>();
+    Map<String, Double> user;
+    ArrayList<String> userArray;
 
     Button buttonEqualconfirmed;
     String groupId;
@@ -52,19 +52,17 @@ public class SplitMethod_EqualValue extends AppCompatActivity {
         total = Double.parseDouble(getIntent().getStringExtra("total"));
 
 
-        ArrayList<MethodSplitObject> arrayList = new ArrayList<>();
+
         db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-                    Map<String, Double> user;
-                    ArrayList<String> userArray;
+
                     user = (HashMap) documentSnapshot.get("user");
                     userArray = (ArrayList<String>) documentSnapshot.get("userArray");
                     for (int i = 0; i < user.size(); i++) {
                         MethodSplitObject userProfile = new MethodSplitObject();
                         userProfile.uid = userArray.get(i);
-                        userProfile.amount = 0.00;
                         arrayList.add(userProfile);
                     }
                     adapter.notifyDataSetChanged();
@@ -74,7 +72,7 @@ public class SplitMethod_EqualValue extends AppCompatActivity {
         });
 
         recyclerView2 = findViewById(R.id.equalvaluelist);
-        adapter = new MethodSplitAdapter(arrayList,total);
+        adapter = new MethodSplitAdapterEqually(arrayList,total);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
         recyclerView2.setAdapter(adapter);
 
@@ -82,32 +80,26 @@ public class SplitMethod_EqualValue extends AppCompatActivity {
         buttonEqualconfirmed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, Double> newAmount = new HashMap<>();
-                for (int i = 0; i < arrayList.size(); i++) {
+                HashMap<String, Double> newAmount = new HashMap<>();
+                for (int i = 0; i < userArray.size(); i++) {
                     View view = recyclerView2.getChildAt(i);
                     TextView amount = view.findViewById(R.id.tvtopay);
-                    Double portion;
-                    portion = Double.parseDouble(amount.getText().toString());
-                    newAmount.put(arrayList.get(i).uid, portion);
+                    Double portion = Double.parseDouble(amount.getText().toString());
+                    newAmount.put(userArray.get(i), portion);
                 }
 
 
                 Intent intent = new Intent(SplitMethod_EqualValue.this, ExpenseAddNew.class);
-                intent.putExtra("splitAmount", (Serializable) newAmount);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra("groupName", groupName);
+                intent.putExtra("splitAmount", newAmount);
+                intent.putExtra("splitUser", userArray);
                 intent.putExtra("price", total);
                 intent.putExtra("billName2", billName2);
-
-
                 startActivity(intent);
             }
         });
 
 
-    }
-
-    public class NVP extends MethodSplitObject implements Serializable {
-        public NVP(String name, Double value) {
-            super(name, value);
-        }
     }
 }

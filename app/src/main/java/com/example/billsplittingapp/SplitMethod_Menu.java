@@ -32,7 +32,7 @@ public class SplitMethod_Menu extends AppCompatActivity {
         groupId = getIntent().getStringExtra("groupId");
         groupName = getIntent().getStringExtra("groupName");
         billName = getIntent().getStringExtra("billName");
-        double total = Double.parseDouble(getIntent().getStringExtra("total"));
+        String total = getIntent().getStringExtra("total");;
 
         btnEqual.setOnClickListener(new View.OnClickListener() {
             @Override

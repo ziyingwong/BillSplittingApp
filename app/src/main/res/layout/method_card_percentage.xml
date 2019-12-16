@@ -51,13 +51,13 @@
 
 
                 <EditText
-                    android:id="@+id/editText"
+                    android:id="@+id/etpercentage"
                     android:layout_width="54dp"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:gravity="center"
+                    android:hint="0"
                     android:inputType="textPersonName"
-                    android:text="Name"
                     android:textSize="14sp" />
 
                 <TextView

@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class MethodSplitAdapter extends RecyclerView.Adapter<MethodSplitAdapter.ViewHolder> {
+public class MethodSplitAdapterEqually extends RecyclerView.Adapter<MethodSplitAdapterEqually.ViewHolder> {
 
     ArrayList<MethodSplitObject> items;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -23,22 +23,22 @@ public class MethodSplitAdapter extends RecyclerView.Adapter<MethodSplitAdapter.
 
 
 
-    public MethodSplitAdapter(ArrayList<MethodSplitObject> items,Double total) {
+    public MethodSplitAdapterEqually(ArrayList<MethodSplitObject> items, Double total) {
         this.items = items;
         this.total = total;
     }
 
     @NonNull
     @Override
-    public MethodSplitAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MethodSplitAdapterEqually.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.method_card_equalvalue, parent, false);
-        return new MethodSplitAdapter.ViewHolder(v);
+        return new MethodSplitAdapterEqually.ViewHolder(v);
     }
 
 
 
     @Override
-    public void onBindViewHolder(@NonNull MethodSplitAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MethodSplitAdapterEqually.ViewHolder holder, int position) {
         MethodSplitObject user = items.get(position);
         DecimalFormat df2 = new DecimalFormat("#.##");
         db.collection("contactList").document(user.uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -47,8 +47,10 @@ public class MethodSplitAdapter extends RecyclerView.Adapter<MethodSplitAdapter.
                 if (documentSnapshot.exists()) {
                     holder.userName.setText(documentSnapshot.get("userName").toString());
                     holder.userEmail.setText(documentSnapshot.get("userEmail").toString());
-                    Double totalamount = total/getItemCount();
-                    holder.userPay.setText(df2.format(totalamount));
+                    double d = total/getItemCount();
+                    String str = String.format("%1.2f", d);
+                    d = Double.valueOf(str);
+                    holder.userPay.setText(str);
 
                 }
             }

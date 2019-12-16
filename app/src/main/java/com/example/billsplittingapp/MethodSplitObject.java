@@ -3,7 +3,7 @@ package com.example.billsplittingapp;
 
 import java.io.Serializable;
 
-public class MethodSplitObject implements Serializable {
+public class MethodSplitObject {
     String uid;
     Double amount;
 
