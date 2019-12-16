@@ -95,12 +95,15 @@ public class ExpenseAddNew extends AppCompatActivity {
                             user = (HashMap) documentSnapshot.get("user");
                             userArray = (ArrayList<String>) documentSnapshot.get("userArray");
 
-
+                            //when splitAmount is not passed from splitting method
                             if (splitAmount == null) {
+
+                                splitAmount = new HashMap<>();
+                                splitUser = new ArrayList<>();
                                 double temp = total / userArray.size();
                                 for (int i = 0; i < userArray.size(); i++) {
-                                   splitAmount.put(userArray.get(i), temp);
-                                   splitUser.add(userArray.get(i));
+                                    splitAmount.put(userArray.get(i), temp);
+                                    splitUser.add(userArray.get(i));
                                 }
                             }
 
