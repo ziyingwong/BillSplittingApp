@@ -348,7 +348,7 @@ class QuickSplitPaidStatusListAdapter extends RecyclerView.Adapter<QuickSplitPai
                             .setMessage(debtor.displayName + " paid you RM" + debtor.amount + " ?")
                             .setPositiveButton("Yes", null)
                             .setNegativeButton("Cancel", null)
-                            .setTitle("Add item")
+                            .setTitle("Settle up")
                             .setCancelable(false)
                             .create();
                     dialog.show();
