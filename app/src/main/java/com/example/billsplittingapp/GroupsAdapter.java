@@ -1,5 +1,6 @@
 package com.example.billsplittingapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.WriteBatch;
 
 import org.w3c.dom.Text;
 
@@ -429,6 +431,38 @@ class GroupsSettingAdapter extends RecyclerView.Adapter<GroupsSettingAdapter.Vie
         return items.size();
     }
 
+    public void delete(Context context, int position, String groupId) {
+        if (Double.parseDouble(items.get(position).amount.toString()) != 0) {
+            Toast.makeText(context, "You cannot remove this user", Toast.LENGTH_SHORT).show();
+            this.notifyDataSetChanged();
+        } else {
+            db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        Map<String, Object> user = (HashMap) documentSnapshot.get("user");
+                        user.remove(items.get(position).uid);
+                        ArrayList<String> userArray = (ArrayList) documentSnapshot.get("userArray");
+                        userArray.remove(items.get(position).uid);
+                        db.runBatch(new WriteBatch.Function() {
+                            @Override
+                            public void apply(@NonNull WriteBatch writeBatch) {
+                                writeBatch.update(db.collection("Groups").document(groupId), "user", user);
+                                writeBatch.update(db.collection("Groups").document(groupId), "userArray", userArray);
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+
+                }
+            });
+        }
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView userName;

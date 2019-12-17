@@ -2,17 +2,23 @@ package com.example.billsplittingapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SearchRecentSuggestionsProvider;
+import android.media.MediaRouter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,8 +35,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,10 +59,12 @@ public class GroupsDetailsSetting extends AppCompatActivity {
         groupId = getIntent().getStringExtra("groupId");
 
         ArrayList<GroupsAmountUserObject> arrayList = new ArrayList<>();
-        db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+        db.collection("Groups").document(groupId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
+                    arrayList.clear();
                     Map<String, Object> user = (HashMap) documentSnapshot.get("user");
                     for (String key : user.keySet()) {
                         GroupsAmountUserObject userProfile = new GroupsAmountUserObject();
@@ -75,15 +87,72 @@ public class GroupsDetailsSetting extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             ArrayList<String> added = (ArrayList) documentSnapshot.get("userArray");
+                            Map<String, Object> user = (HashMap) documentSnapshot.get("user");
                             db.collection("contactList").document(auth.getCurrentUser().getUid()).collection("friend").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    ArrayList<String> notAdded = new ArrayList<>();
+                                    Map<String, String> notAdded = new HashMap<>();
                                     for (int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++) {
                                         if (!added.contains(queryDocumentSnapshots.getDocuments().get(i).getId())) {
-                                            notAdded.add(queryDocumentSnapshots.getDocuments().get(i).getId());
+
+                                            notAdded.put(queryDocumentSnapshots.getDocuments().get(i).getId(), queryDocumentSnapshots.getDocuments().get(i).get("friendName").toString());
                                         }
                                     }
+
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(GroupsDetailsSetting.this);
+                                    dialog.setTitle("Add Friends to Group");
+                                    LinearLayout layout = new LinearLayout(GroupsDetailsSetting.this);
+                                    layout.setOrientation(LinearLayout.VERTICAL);
+                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 600);
+                                    lp.setMargins(50, 50, 70, 0);
+                                    View radioLayout = LayoutInflater.from(GroupsDetailsSetting.this).inflate(R.layout.other_radiobuttons, layout, false);
+                                    RadioGroup radioGroup = radioLayout.findViewById(R.id.radioGroup);
+                                    ArrayList<String> selectedArray = new ArrayList<>();
+                                    for (String key : notAdded.keySet()) {
+                                        CheckBox checkBox = new CheckBox(GroupsDetailsSetting.this);
+                                        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                            @Override
+                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                if (isChecked) {
+                                                    selectedArray.add(key);
+                                                } else {
+                                                    selectedArray.remove(key);
+                                                }
+                                            }
+
+                                        });
+//                                        checkBox.setId(key);
+                                        checkBox.setText(notAdded.get(key));
+                                        radioGroup.addView(checkBox);
+                                    }
+
+                                    layout.addView(radioLayout, lp);
+                                    dialog.setView(layout);
+                                    dialog.setNegativeButton("Cancel", null);
+                                    dialog.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            added.addAll(selectedArray);
+                                            for (String key : selectedArray) {
+                                                user.put(key, 0.0);
+                                            }
+                                            db.runBatch(new WriteBatch.Function() {
+                                                @Override
+                                                public void apply(@NonNull WriteBatch writeBatch) {
+                                                    writeBatch.update(db.collection("Groups").document(groupId), "user", user);
+                                                    writeBatch.update(db.collection("Groups").document(groupId), "userArray", added);
+//                                                    writeBatch.commit();
+                                                }
+                                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(GroupsDetailsSetting.this, "Updated", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                    dialog.show();
 
                                 }
                             });
@@ -169,6 +238,29 @@ public class GroupsDetailsSetting extends AppCompatActivity {
                 finish();
             }
         });
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                adapter.delete(
+                        viewHolder.itemView.getContext(),
+                        viewHolder.getAdapterPosition(),
+                        groupId
+                );
+            }
+
+
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallBack);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
 
     }
 
