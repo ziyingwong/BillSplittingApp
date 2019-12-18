@@ -68,6 +68,8 @@ public class GroupsAdapter extends FirestoreRecyclerAdapter<GroupsObject, Groups
         } else {
             String stringAmountFormat = String.format("%,.2f", groupsObjects.user.get(auth.getCurrentUser().getUid()));
             viewHolder.amount.setText("RM" + stringAmountFormat);
+            viewHolder.amount.setTextColor(Color.parseColor("#A9A9A9"));
+
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +108,8 @@ public class GroupsAdapter extends FirestoreRecyclerAdapter<GroupsObject, Groups
 
 class GroupsNewFriendAddedAdapter extends RecyclerView.Adapter<GroupsNewFriendAddedAdapter.ViewHolder> {
     ArrayList<GroupsNewUserObject> items;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     public GroupsNewFriendAddedAdapter(ArrayList<GroupsNewUserObject> items) {
         this.items = items;
@@ -131,6 +135,37 @@ class GroupsNewFriendAddedAdapter extends RecyclerView.Adapter<GroupsNewFriendAd
     public int getItemCount() {
         return items.size();
     }
+
+    public void delete(Context context, int position, String groupId) {
+        db.collection("Groups").document(groupId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+
+                    Map<String, Object> user = (HashMap) documentSnapshot.get("user");
+                    user.remove(items.get(position).getFriendUID());
+                    ArrayList<String> userArray = (ArrayList) documentSnapshot.get("userArray");
+                    userArray.remove(items.get(position).getFriendUID());
+
+                    db.runBatch(new WriteBatch.Function() {
+                        @Override
+                        public void apply(@NonNull WriteBatch writeBatch) {
+                            writeBatch.update(db.collection("Groups").document(groupId), "user", user);
+                            writeBatch.update(db.collection("Groups").document(groupId), "userArray", userArray);
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+
+            }
+        });
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView friendName;

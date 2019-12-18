@@ -48,21 +48,24 @@ public class GroupsDetails extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Map<String, Double> map = (HashMap) documentSnapshot.get("user");
-                Object objectamount = map.get(uid);
-                Double totalAmount = Double.parseDouble(objectamount.toString());
-                if (totalAmount > 0) {
-                    totalAmountString.setTextColor(Color.parseColor("#45B39D"));
-                    totalAmountString.setText("You are owed RM");
-                    String totalAmountBox = String.format("%,.2f", totalAmount);
-                    totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
-                } else if (totalAmount < 0) {
-                    totalAmountString.setTextColor(Color.parseColor("#D81B60"));
-                    totalAmountString.setText("You owe RM");
-                    String totalAmountBox = String.format("%,.2f", (totalAmount * -1));
-                    totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
+                if (map == null) {
                 } else {
-                    totalAmountString.setTextColor(Color.parseColor("#8E8E8E"));
-                    totalAmountString.setText("You are being settled up");
+                    Object objectamount = map.get(uid);
+                    Double totalAmount = Double.parseDouble(objectamount.toString());
+                    if (totalAmount > 0) {
+                        totalAmountString.setTextColor(Color.parseColor("#45B39D"));
+                        totalAmountString.setText("You are owed RM");
+                        String totalAmountBox = String.format("%,.2f", totalAmount);
+                        totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
+                    } else if (totalAmount < 0) {
+                        totalAmountString.setTextColor(Color.parseColor("#D81B60"));
+                        totalAmountString.setText("You owe RM");
+                        String totalAmountBox = String.format("%,.2f", (totalAmount * -1));
+                        totalAmountString.setText(totalAmountString.getText() + totalAmountBox);
+                    } else {
+                        totalAmountString.setTextColor(Color.parseColor("#8E8E8E"));
+                        totalAmountString.setText("You are being settled up");
+                    }
                 }
             }
         });
@@ -115,7 +118,7 @@ public class GroupsDetails extends AppCompatActivity {
                 .setQuery(query, GroupsPaymentObject.class)
                 .build();
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new GroupsPaymentAdapter(options,groupId);
+        adapter = new GroupsPaymentAdapter(options, groupId);
         adapter.startListening();
         recycler.setAdapter(adapter);
 

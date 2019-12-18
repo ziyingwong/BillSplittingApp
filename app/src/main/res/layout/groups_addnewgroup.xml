@@ -45,6 +45,11 @@
                 android:hint="Enter a group name"
                 android:inputType="textPersonName"
                 android:textSize="25dp" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/groupnameButton"
+                android:text="Confirm Group name"/>
 
         </LinearLayout>
 
@@ -97,28 +102,28 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:background="@color/cardBackground"
-            android:orientation="vertical"
-            android:padding="15dp">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="2dp"-->
+<!--            android:background="@color/cardBackground"-->
+<!--            android:orientation="vertical"-->
+<!--            android:padding="15dp">-->
 
-            <TextView
-                android:id="@+id/groupSelfName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Self Name"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+<!--            <TextView-->
+<!--                android:id="@+id/groupSelfName"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Self Name"-->
+<!--                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />-->
 
-            <TextView
-                android:id="@+id/groupSelfEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Self Email" />
+<!--            <TextView-->
+<!--                android:id="@+id/groupSelfEmail"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Self Email" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
