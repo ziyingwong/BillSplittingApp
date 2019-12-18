@@ -74,6 +74,7 @@ public class QuickSplitGeneralViewEnteredShare extends AppCompatActivity {
                                         intent.putExtra("billId", billId);
                                         intent.putExtra("edit", true);
                                         intent.putExtra("creditor", creditor);
+                                        intent.putExtra("debtorUid",uid);
                                         startActivity(intent);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {

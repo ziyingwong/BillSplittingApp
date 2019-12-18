@@ -51,6 +51,7 @@ public class QuickSplitGeneralEnterShare extends AppCompatActivity {
         if (creditor && editState) {
             uid = getIntent().getStringExtra("debtorUid");
         }
+        Log.e("mytag",uid);
 
         Button doneButton = findViewById(R.id.buttonDone);
         LinearLayout editStateButtons = findViewById(R.id.editStateButtons);
@@ -147,7 +148,7 @@ public class QuickSplitGeneralEnterShare extends AppCompatActivity {
         data.put("status", QuickSplitMemberStatus.SELECTED_ITEM);
 
         db.collection("QuickSplit").document(billId)
-                .collection("splitWith").document(auth.getCurrentUser().getUid())
+                .collection("splitWith").document(uid)
                 .set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -201,7 +202,7 @@ public class QuickSplitGeneralEnterShare extends AppCompatActivity {
             data.put("status", QuickSplitMemberStatus.SELECTED_ITEM);
 
             db.collection("QuickSplit").document(billId)
-                    .collection("splitWith").document(auth.getCurrentUser().getUid())
+                    .collection("splitWith").document(uid)
                     .set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
